@@ -1,9 +1,9 @@
 //User model
-const User = (id = undefined, email, password, name) => {
+const User = (email, name, password, id) => {
   return {
-    id,
-    email,
-    password,
+    id: id,
+    email: email,
+    password: password,
     name,
   };
 };

@@ -1,19 +1,22 @@
+const Errors = require("../constants/errors");
 class MusicTransferError extends Error {
-  constructor(message, code) {
+  constructor(message, statusCode) {
     super();
-    this.code = code;
     this.message = message;
+    this.statusCode = statusCode;
   }
 }
 
 const handleError = (err, res) => {
-  const { code, message } = err;
-  console.log(code, message);
-  console.log("here");
-  res.status(code).json({
+  const { statusCode, message } = err;
+  if (!statusCode) {
+    statusCode = Errors.INTERNAL_SERVER_ERROR;
+  }
+  console.log(statusCode, message);
+  res.status(statusCode).json({
     Error: {
       message,
-      code,
+      statusCode,
     },
   });
 };

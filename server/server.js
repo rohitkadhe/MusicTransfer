@@ -4,6 +4,7 @@ const app = express();
 const errorHandler = require("./middlewares/errors");
 const MusicTransferError = require("./helpers/errorHelper").MusicTransferError;
 const authRoutes = require("./routes/auth/authRoutes");
+const Errors = require("./constants/errors");
 
 require("./env/env");
 //Body parser
@@ -13,7 +14,12 @@ app.use(morgan("combined"));
 //Routes
 app.use(authRoutes);
 app.all("*", (req, res, next) => {
-  next(new MusicTransferError("Internal Server Error", 500));
+  next(
+    new MusicTransferError(
+      `Route ${req.originalUrl} does not exist`,
+      Errors.NOT_FOUND
+    )
+  );
 });
 
 app.use(errorHandler);

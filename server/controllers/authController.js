@@ -5,7 +5,7 @@ var Errors = require("../constants/errors");
 var MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
 
 const { validEmail, validPassword, isEmpty } = authHelper;
-const { BAD_REQUEST, UNAUTHORIZED, NOT_FOUND } = Errors;
+const { BAD_REQUEST, UNAUTHORIZED, NOT_FOUND, INTERNAL_SERVER_ERROR } = Errors;
 
 const registerUser = async (req, res, next) => {
   const { email, password, name } = req.body;
@@ -20,7 +20,7 @@ const registerUser = async (req, res, next) => {
       .from("users")
       .select("email")
       .where({ email: req.body.email });
-
+    console.log(userExists);
     if (userExists.length !== 0) {
       throw new MusicTransferError(
         "An account with that email already exists",
@@ -30,7 +30,7 @@ const registerUser = async (req, res, next) => {
     const hashedPassword = await authHelper.hashPassword(password);
 
     const result = await db("users")
-      .insert(User(email, hashedPassword, name))
+      .insert(User(email, name, hashedPassword))
       .returning(["id", "email", "name"]);
 
     const user = result[0];
@@ -58,7 +58,7 @@ const signInUser = async (req, res, next) => {
     if (await authHelper.comparePasswords(password, user[0].password)) {
       const token = authHelper.genToken({ id: user.id, iat: Date.now() });
       res.json({
-        user: User(user[0].id, user[0].password, user[0].email),
+        user: User(user[0].email, user[0].name, user[0].id),
         token,
       });
     } else {
