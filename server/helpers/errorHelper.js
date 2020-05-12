@@ -8,11 +8,11 @@ class MusicTransferError extends Error {
 }
 
 const handleError = (err, res) => {
-  const { statusCode, message } = err;
+  var { statusCode, message } = err;
   if (!statusCode) {
     statusCode = Errors.INTERNAL_SERVER_ERROR;
   }
-  console.log(statusCode, message);
+
   res.status(statusCode).json({
     Error: {
       message,
