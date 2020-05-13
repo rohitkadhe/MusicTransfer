@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const MusicTransferError = require("./errorHelper").MusicTransferError;
+const Errors = require("../constants/errors");
 require("../env/env");
 
 const validEmail = (email) => {
@@ -8,7 +10,7 @@ const validEmail = (email) => {
 };
 
 const validPassword = (password) => {
-  if (password === undefined || password.length <= 5 || password === "") {
+  if (password === undefined || password.length <= 8 || password === "") {
     return false;
   }
   return true;
@@ -18,7 +20,6 @@ const isEmpty = (input) => {
   if (input === undefined || input === "") {
     return true;
   }
-
   return false;
 };
 
@@ -38,16 +39,16 @@ const genToken = (payload, options) => {
     const token = jwt.sign(payload, secret, options);
     return token;
   } catch (err) {
-    throw err;
+    throw new MusicTransferError(err.message, Errors.INTERNAL_SERVER_ERROR);
   }
 };
 
-const decode = (token) => {
+const verify = (token) => {
   try {
-    const decoded = jwt.decode(token, process.env.SECRET);
+    const decoded = jwt.verify(token, process.env.SECRET);
     return decoded;
   } catch (err) {
-    throw err;
+    throw new MusicTransferError(err.message, Errors.UNAUTHORIZED);
   }
 };
 
@@ -58,5 +59,5 @@ module.exports = {
   isEmpty,
   comparePasswords,
   genToken,
-  decode,
+  verify,
 };

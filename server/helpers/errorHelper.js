@@ -15,7 +15,7 @@ const handleError = (err, res) => {
 
   res.status(statusCode).json({
     Error: {
-      message,
+      message: message.charAt(0).toUpperCase() + message.slice(1),
       statusCode,
     },
   });

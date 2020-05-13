@@ -1,5 +1,6 @@
 var User = require("../models/User");
 var authHelper = require("../helpers/authHelper");
+var Time = require("../constants/time");
 
 const registerUser = async (req, res, next) => {
   const { email, password, name } = req.body;
@@ -13,7 +14,10 @@ const registerUser = async (req, res, next) => {
       const user = new User(email, name, hashedPassword);
 
       const savedUser = await user.save(["id", "name", "email"]);
-      const token = authHelper.genToken({ id: user.id, iat: Date.now() });
+      const token = authHelper.genToken(
+        { id: user.id },
+        { expiresIn: Time.ONE_HOUR }
+      );
 
       res.json({ user: savedUser, token });
     }
@@ -28,7 +32,10 @@ const signInUser = async (req, res, next) => {
     var user = await User.findUser(email);
 
     if (user && (await User.validCredentials(password, user.password))) {
-      const token = authHelper.genToken({ id: user.id, iat: Date.now() });
+      const token = authHelper.genToken(
+        { id: user.id },
+        { expiresIn: Time.ONE_HOUR }
+      );
 
       res.json({
         user: new User(user.email, user.name, undefined, user.id),
