@@ -1,7 +1,7 @@
-var express = require("express");
-var router = express();
-var authController = require("../../controllers/authController");
-var verifyAuth = require("../../middlewares/auth");
+const express = require("express");
+const router = express();
+const authController = require("../../controllers/authController");
+const verifyAuth = require("../../middlewares/auth");
 
 router.post("/users/register", authController.registerUser);
 router.post("/users/signin", authController.signInUser);

@@ -4,7 +4,7 @@ const app = express();
 const errorHandler = require("./middlewares/errors");
 const MusicTransferError = require("./helpers/errorHelper").MusicTransferError;
 const authRoutes = require("./routes/auth/authRoutes");
-const Errors = require("./constants/errors");
+const HttpErrors = require("./constants/httpErrors");
 
 require("./env/env");
 //Body parser
@@ -17,7 +17,7 @@ app.all("*", (req, res, next) => {
   next(
     new MusicTransferError(
       `Route ${req.originalUrl} does not exist`,
-      Errors.NOT_FOUND
+      HttpErrors.NOT_FOUND
     )
   );
 });

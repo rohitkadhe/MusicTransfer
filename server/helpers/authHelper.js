@@ -1,7 +1,10 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const MusicTransferError = require("./errorHelper").MusicTransferError;
+const HttpErrors = require("../constants/httpErrors");
 const Errors = require("../constants/errors");
+
+const { INVALID_CREDENTIALS } = Errors;
 require("../env/env");
 
 const validEmail = (email) => {
@@ -10,7 +13,7 @@ const validEmail = (email) => {
 };
 
 const validPassword = (password) => {
-  if (password === undefined || password.length <= 8 || password === "") {
+  if (password === undefined || password.length >= 8 || password === "") {
     return false;
   }
   return true;
@@ -24,13 +27,17 @@ const isEmpty = (input) => {
 };
 
 const hashPassword = async (password) => {
-  var hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
   return hashedPassword;
 };
 
 const comparePasswords = async (reqPassword, userPassword) => {
-  var res = await bcrypt.compare(reqPassword, userPassword);
-  return res;
+  try {
+    const res = await bcrypt.compare(reqPassword, userPassword);
+    return res;
+  } catch (err) {
+    throw new MusicTransferError(INVALID_CREDENTIALS, HttpErrors.UNAUTHORIZED);
+  }
 };
 
 const genToken = (payload, options) => {
@@ -39,7 +46,7 @@ const genToken = (payload, options) => {
     const token = jwt.sign(payload, secret, options);
     return token;
   } catch (err) {
-    throw new MusicTransferError(err.message, Errors.INTERNAL_SERVER_ERROR);
+    throw new MusicTransferError(err.message, HttpErrors.INTERNAL_SERVER_ERROR);
   }
 };
 
@@ -48,7 +55,7 @@ const verify = (token) => {
     const decoded = jwt.verify(token, process.env.SECRET);
     return decoded;
   } catch (err) {
-    throw new MusicTransferError(err.message, Errors.UNAUTHORIZED);
+    throw new MusicTransferError(err.message, HttpErrors.UNAUTHORIZED);
   }
 };
 

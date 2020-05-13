@@ -1,10 +1,17 @@
-var dbHelper = require("../helpers/dbHelper");
-var authHelper = require("../helpers/authHelper");
-var Errors = require("../constants/errors");
-var MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
-var authHelper = require("../helpers/authHelper");
+const dbHelper = require("../helpers/dbHelper");
+const authHelper = require("../helpers/authHelper");
+const HttpErrors = require("../constants/httpErrors");
+const Errors = require("../constants/errors");
+const MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
+
 const { validEmail, validPassword, isEmpty } = authHelper;
-const { BAD_REQUEST, NOT_FOUND } = Errors;
+const { BAD_REQUEST, NOT_FOUND, UNAUTHORIZED } = HttpErrors;
+const {
+  INVALID_FIELDS,
+  ACCOUNT_EXISTS,
+  USER_NOT_FOUND,
+  INVALID_CREDENTIALS,
+} = Errors;
 
 class User {
   constructor(email, name, password, id) {
@@ -15,58 +22,46 @@ class User {
   }
 
   static validModel(email, name, password) {
-    var res = validEmail(email) && validPassword(password) && !isEmpty(name);
+    const res = validEmail(email) && validPassword(password) && !isEmpty(name);
+    console.log(validEmail(email), validPassword(password), !isEmpty(name));
     if (!res) {
-      throw new MusicTransferError(
-        "Bad request. Ensure email, password, name are present and formatted correctly",
-        BAD_REQUEST
-      );
+      throw new MusicTransferError(INVALID_FIELDS, BAD_REQUEST);
     }
     return true;
   }
-
-  static async validCredentials(reqPassword, password) {
-    var error = new MusicTransferError(
-      "Invalid credentials",
-      Errors.UNAUTHORIZED
-    );
-    try {
-      var authenticated = await authHelper.comparePasswords(
-        reqPassword,
-        password
-      );
-      if (!authenticated) {
-        throw err;
-      }
-      return authenticated;
-    } catch (err) {
-      throw error;
+  static validSignInRequest(email, password) {
+    const res = validEmail(email) && validPassword(password);
+    if (!res) {
+      throw new MusicTransferError(INVALID_FIELDS, BAD_REQUEST);
     }
+    return true;
+  }
+  static async validCredentials(reqPassword, password) {
+    const authenticated = await authHelper.comparePasswords(
+      reqPassword,
+      password
+    );
+    if (!authenticated) {
+      throw new MusicTransferError(INVALID_CREDENTIALS, UNAUTHORIZED);
+    }
+    return authenticated;
   }
 
   async save(returnParams) {
-    var res = await dbHelper.save("users", this, returnParams);
+    const res = await dbHelper.save("users", this, returnParams);
     return res[0];
   }
 
   static async accountExists(email) {
     const res = await dbHelper.find("users", "email", { email });
     if (res.length !== 0)
-      throw new MusicTransferError(
-        "An account with that email already exists",
-        BAD_REQUEST
-      );
+      throw new MusicTransferError(ACCOUNT_EXISTS, BAD_REQUEST);
     return false;
   }
   static async findUser(email) {
-    const res = await dbHelper.find("users", ["*"], {
-      email,
-    });
+    const res = await dbHelper.find("users", ["*"], { email });
     if (res.length == 0)
-      throw new MusicTransferError(
-        "An account with that email wad not found",
-        NOT_FOUND
-      );
+      throw new MusicTransferError(USER_NOT_FOUND, NOT_FOUND);
     return res[0];
   }
 }
