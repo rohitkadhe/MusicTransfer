@@ -3,9 +3,7 @@ const router = express();
 const authController = require("../../controllers/authController");
 const verifyAuth = require("../../middlewares/auth");
 
-router.post("/users/register", authController.registerUser);
-router.post("/users/signin", authController.signInUser);
-router.get("/test", verifyAuth, (req, res) => {
-  res.send(req.user);
-});
+router.post("/users/register", authController.register);
+router.post("/users/login", authController.login);
+
 module.exports = router;

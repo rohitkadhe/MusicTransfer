@@ -1,5 +1,5 @@
 const authHelper = require("../helpers/authHelper");
-const Errors = require("../constants/errors");
+const Errors = require("../constants/musicTransferErrors");
 const MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
 const HttpErrors = require("../constants/httpErrors");
 

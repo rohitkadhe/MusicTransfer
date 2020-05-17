@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const app = express();
 const errorHandler = require("./middlewares/errors");
 const MusicTransferError = require("./helpers/errorHelper").MusicTransferError;
-const authRoutes = require("./routes/auth/authRoutes");
+const authRoutes = require("./routes/app/auth");
 const HttpErrors = require("./constants/httpErrors");
 
 require("./env/env");

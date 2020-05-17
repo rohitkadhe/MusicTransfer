@@ -1,7 +1,7 @@
 const dbHelper = require("../helpers/dbHelper");
 const authHelper = require("../helpers/authHelper");
 const HttpErrors = require("../constants/httpErrors");
-const Errors = require("../constants/errors");
+const Errors = require("../constants/musicTransferErrors");
 const MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
 
 const { validEmail, validPassword, isEmpty } = authHelper;

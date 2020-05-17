@@ -2,7 +2,7 @@ const User = require("../models/User");
 const authHelper = require("../helpers/authHelper");
 const Time = require("../constants/time");
 
-const registerUser = async (req, res, next) => {
+const register = async (req, res, next) => {
   const { email, password, name } = req.body;
   try {
     if (
@@ -26,12 +26,12 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-const signInUser = async (req, res, next) => {
+const login = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     if (User.validSignInRequest(email, password)) {
       const user = await User.findUser(email);
-
+      console.log("Valid request");
       if (await User.validCredentials(password, user.password)) {
         const token = authHelper.genToken(
           { id: user.id },
@@ -49,4 +49,4 @@ const signInUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, signInUser };
+module.exports = { register, login };

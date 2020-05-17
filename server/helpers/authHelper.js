@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const MusicTransferError = require("./errorHelper").MusicTransferError;
 const HttpErrors = require("../constants/httpErrors");
-const Errors = require("../constants/errors");
+const Errors = require("../constants/musicTransferErrors");
 
 const { INVALID_CREDENTIALS } = Errors;
 require("../env/env");
@@ -13,7 +13,7 @@ const validEmail = (email) => {
 };
 
 const validPassword = (password) => {
-  if (password === undefined || password.length >= 8 || password === "") {
+  if (password === undefined || password.length < 8 || password === "") {
     return false;
   }
   return true;

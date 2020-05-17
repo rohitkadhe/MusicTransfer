@@ -9,4 +9,5 @@ const createUsersTable = async () => {
     table.timestamp("joined_on").defaultTo(db.fn.now());
   });
 };
+
 module.exports = createUsersTable;
