@@ -1,11 +1,11 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const MusicTransferError = require("./errorHelper").MusicTransferError;
+const MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
 const HttpErrors = require("../constants/httpErrors");
 const Errors = require("../constants/musicTransferErrors");
 
 const { INVALID_CREDENTIALS } = Errors;
-require("../env/env");
+require("../config/env");
 
 const validEmail = (email) => {
   const regEx = /\S+@\S+\.\S+/;

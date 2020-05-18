@@ -1,2 +1,2 @@
-const ONE_HOUR = 60 * 60;
+const ONE_HOUR = 3600;
 module.exports = { ONE_HOUR };

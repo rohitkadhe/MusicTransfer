@@ -1,9 +1,9 @@
-const dbHelper = require("../helpers/dbHelper");
-const authHelper = require("../helpers/authHelper");
-const HttpErrors = require("../constants/httpErrors");
-const Errors = require("../constants/musicTransferErrors");
-const MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
-
+const dbHelper = require("../../utils/dbUtil");
+const authHelper = require("../../utils/authUtil");
+const HttpErrors = require("../../constants/httpErrors");
+const Errors = require("../../constants/musicTransferErrors");
+const MusicTransferError = require("../../helpers/errorHelper")
+  .MusicTransferError;
 const { validEmail, validPassword, isEmpty } = authHelper;
 const { BAD_REQUEST, NOT_FOUND, UNAUTHORIZED } = HttpErrors;
 const {

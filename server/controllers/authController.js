@@ -1,7 +1,6 @@
-const User = require("../models/User");
-const authHelper = require("../helpers/authHelper");
+const User = require("../models/MusicTransfer/User");
+const authHelper = require("../utils/authUtil");
 const Time = require("../constants/time");
-
 const register = async (req, res, next) => {
   const { email, password, name } = req.body;
   try {
@@ -31,7 +30,7 @@ const login = async (req, res, next) => {
   try {
     if (User.validSignInRequest(email, password)) {
       const user = await User.findUser(email);
-      console.log("Valid request");
+
       if (await User.validCredentials(password, user.password)) {
         const token = authHelper.genToken(
           { id: user.id },
