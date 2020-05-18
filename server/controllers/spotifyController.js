@@ -32,7 +32,7 @@ const callback = async (req, res, next) => {
     client_id,
     client_secret,
     code,
-    grant_type: "client_credentials",
+    grant_type: "authorization_code",
     redirect_uri: REDIRECT_URI,
   };
   let queryString = new URLSearchParams(params).toString();
