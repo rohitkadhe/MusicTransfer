@@ -1,4 +1,5 @@
 const HttpErrors = require("../constants/httpErrors");
+
 class MusicTransferError extends Error {
   constructor(message, statusCode) {
     super();
@@ -7,19 +8,28 @@ class MusicTransferError extends Error {
   }
 }
 
+class AxiosError extends Error {
+  constructor(error) {
+    super();
+    this.message = error.response.data.error.message;
+    this.statusCode = error.response.status;
+  }
+}
+
 const handleError = (err, res) => {
   let { statusCode, message } = err;
-  if (!statusCode || !message) {
+  if (!statusCode) {
     statusCode = HttpErrors.INTERNAL_SERVER_ERROR;
-    message = "Internal Server Error";
   }
-
+  if (!message) {
+    message = "Unknown Server Error";
+  }
   res.status(statusCode).json({
     Error: {
-      message: message.charAt(0).toUpperCase() + message.slice(1),
+      message,
       statusCode,
     },
   });
 };
 
-module.exports = { MusicTransferError, handleError };
+module.exports = { MusicTransferError, AxiosError, handleError };

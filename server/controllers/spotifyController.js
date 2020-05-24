@@ -1,50 +1,47 @@
-require("../config/env");
-const url = require("url");
-const SpotifyAPI = require("../constants/spotifyAPI");
-const { URLSearchParams } = url;
+const spotifyUtil = require("../utils/spotifyUtil");
 const MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
-const HttpErrors = require("../constants/httpErrors");
-const { RESPONSE_TYPE, SCOPES, REDIRECT_URI } = SpotifyAPI;
-var axios = require("axios");
+const { UNAUTHORIZED } = require("../constants/httpErrors");
+const { SPOTIFY_AUTH_HEADER } = require("../constants/spotifyAPI");
 
 const authenticate = async (req, res, next) => {
   try {
-    const url = "https://accounts.spotify.com/authorize?";
-    const params = {
-      client_id: process.env.SPOTIFY_CLIENT_ID,
-      response_type: RESPONSE_TYPE,
-      redirect_uri: REDIRECT_URI,
-      scope: SCOPES,
-    };
-    let queryString = new URLSearchParams(params).toString();
-    let redirectUrl = url + queryString;
+    const redirectUrl = spotifyUtil.generateRedirectUri();
     res.redirect(redirectUrl);
   } catch (err) {
-    throw new MusicTransferError(err.message, HttpErrors.UNAUTHORIZED);
+    next(new MusicTransferError(err.message, UNAUTHORIZED));
   }
 };
 
 const callback = async (req, res, next) => {
-  var client_id = process.env.SPOTIFY_CLIENT_ID;
-  var client_secret = process.env.SPOTIFY_CLIENT_SECRET;
-  var code = req.query.code || null;
-  const params = {
-    client_id,
-    client_secret,
-    code,
-    grant_type: "authorization_code",
-    redirect_uri: REDIRECT_URI,
-  };
-  let queryString = new URLSearchParams(params).toString();
-  axios
-    .post("https://accounts.spotify.com/api/token", queryString)
-    .then((response) => {
-      console.log(response.data);
-      res.send(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-      res.send(error);
-    });
+  try {
+    const code = req.query.code || null;
+    const response = await spotifyUtil.getAccessAndRefreshTokens(code);
+    const user = await spotifyUtil.getUser(response.access_token);
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
 };
-module.exports = { authenticate, callback };
+
+const refreshToken = async (req, res, next) => {
+  try {
+    const response = await spotifyUtil.refreshAccessToken(
+      req.header(SPOTIFY_AUTH_HEADER)
+    );
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+const getUserPlaylists = async (req, res, next) => {
+  try {
+    const response = await spotifyUtil.getUserPlaylists(
+      req.params.spotify_user_id,
+      req.header(SPOTIFY_AUTH_HEADER)
+    );
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports = { authenticate, callback, refreshToken, getUserPlaylists };

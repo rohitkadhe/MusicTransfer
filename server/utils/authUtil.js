@@ -2,9 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
 const HttpErrors = require("../constants/httpErrors");
-const Errors = require("../constants/musicTransferErrors");
-
-const { INVALID_CREDENTIALS } = Errors;
+const { INVALID_CREDENTIALS } = require("../constants/musicTransferErrors");
 require("../config/env");
 
 const validEmail = (email) => {

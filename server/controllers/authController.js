@@ -1,6 +1,7 @@
 const User = require("../models/MusicTransfer/User");
-const authHelper = require("../utils/authUtil");
+const authUtil = require("../utils/authUtil");
 const Time = require("../constants/time");
+
 const register = async (req, res, next) => {
   const { email, password, name } = req.body;
   try {
@@ -8,12 +9,12 @@ const register = async (req, res, next) => {
       User.validModel(email, password, name) &&
       !(await User.accountExists(email))
     ) {
-      const hashedPassword = await authHelper.hashPassword(password);
+      const hashedPassword = await authUtil.hashPassword(password);
 
       const user = new User(email, name, hashedPassword);
 
       const savedUser = await user.save(["id", "name", "email"]);
-      const token = authHelper.genToken(
+      const token = authUtil.genToken(
         { id: user.id },
         { expiresIn: Time.ONE_HOUR }
       );
@@ -32,7 +33,7 @@ const login = async (req, res, next) => {
       const user = await User.findUser(email);
 
       if (await User.validCredentials(password, user.password)) {
-        const token = authHelper.genToken(
+        const token = authUtil.genToken(
           { id: user.id },
           { expiresIn: Time.ONE_HOUR }
         );

@@ -3,7 +3,7 @@ const INVALID_FIELDS =
 const ACCOUNT_EXISTS = "An account with that email already exists";
 const USER_NOT_FOUND = "User with that email was not found";
 const INVALID_CREDENTIALS = "Invalid credentials";
-const MISSING_TOKEN = "Missing token";
+const MISSING_TOKEN = "Missing jwt token";
 module.exports = {
   INVALID_CREDENTIALS,
   INVALID_FIELDS,

@@ -1,17 +1,27 @@
-const dbHelper = require("../../utils/dbUtil");
-const authHelper = require("../../utils/authUtil");
-const HttpErrors = require("../../constants/httpErrors");
-const Errors = require("../../constants/musicTransferErrors");
+const dbUtil = require("../../utils/dbUtil");
+
+const {
+  validEmail,
+  validPassword,
+  isEmpty,
+  comparePasswords,
+} = require("../../utils/authUtil");
+
 const MusicTransferError = require("../../helpers/errorHelper")
   .MusicTransferError;
-const { validEmail, validPassword, isEmpty } = authHelper;
-const { BAD_REQUEST, NOT_FOUND, UNAUTHORIZED } = HttpErrors;
+
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  UNAUTHORIZED,
+} = require("../../constants/httpErrors");
+
 const {
   INVALID_FIELDS,
   ACCOUNT_EXISTS,
   USER_NOT_FOUND,
   INVALID_CREDENTIALS,
-} = Errors;
+} = require("../../constants/musicTransferErrors");
 
 class User {
   constructor(email, name, password, id) {
@@ -23,7 +33,6 @@ class User {
 
   static validModel(email, name, password) {
     const res = validEmail(email) && validPassword(password) && !isEmpty(name);
-    console.log(validEmail(email), validPassword(password), !isEmpty(name));
     if (!res) {
       throw new MusicTransferError(INVALID_FIELDS, BAD_REQUEST);
     }
@@ -31,16 +40,14 @@ class User {
   }
   static validSignInRequest(email, password) {
     const res = validEmail(email) && validPassword(password);
+
     if (!res) {
       throw new MusicTransferError(INVALID_FIELDS, BAD_REQUEST);
     }
     return true;
   }
   static async validCredentials(reqPassword, password) {
-    const authenticated = await authHelper.comparePasswords(
-      reqPassword,
-      password
-    );
+    const authenticated = await comparePasswords(reqPassword, password);
     if (!authenticated) {
       throw new MusicTransferError(INVALID_CREDENTIALS, UNAUTHORIZED);
     }
@@ -48,18 +55,18 @@ class User {
   }
 
   async save(returnParams) {
-    const res = await dbHelper.save("users", this, returnParams);
+    const res = await dbUtil.save("users", this, returnParams);
     return res[0];
   }
 
   static async accountExists(email) {
-    const res = await dbHelper.find("users", "email", { email });
+    const res = await dbUtil.find("users", "email", { email });
     if (res.length !== 0)
       throw new MusicTransferError(ACCOUNT_EXISTS, BAD_REQUEST);
     return false;
   }
   static async findUser(email) {
-    const res = await dbHelper.find("users", ["*"], { email });
+    const res = await dbUtil.find("users", ["*"], { email });
     if (res.length == 0)
       throw new MusicTransferError(USER_NOT_FOUND, NOT_FOUND);
     return res[0];

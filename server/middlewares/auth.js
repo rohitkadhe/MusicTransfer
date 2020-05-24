@@ -1,13 +1,12 @@
-const authHelper = require("../utils/authUtil");
+const authUtil = require("../utils/authUtil");
 const MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
 const HttpErrors = require("../constants/httpErrors");
-const Errors = require("../constants/musicTransferErrors");
-const { MISSING_TOKEN } = Errors;
+const { MISSING_TOKEN } = require("../constants/musicTransferErrors");
 
-// This middleware can be used to protect any routes that require auth
-const verifyAuth = (req, res, next) => {
+// This middleware can be used to protect any app routes that require auth
+const verifyAppAuth = (req, res, next) => {
   const authString = req.header("Authorization");
-  if (authHelper.isEmpty(authString)) {
+  if (authUtil.isEmpty(authString)) {
     return next(new MusicTransferError(MISSING_TOKEN, HttpErrors.BAD_REQUEST));
   }
   const [bearer, token] = authString.split(" ");
@@ -17,7 +16,7 @@ const verifyAuth = (req, res, next) => {
   }
 
   try {
-    const decoded = authHelper.verify(token);
+    const decoded = authUtil.verify(token);
     req.user = decoded;
     next();
   } catch (err) {
@@ -25,4 +24,4 @@ const verifyAuth = (req, res, next) => {
   }
 };
 
-module.exports = verifyAuth;
+module.exports = verifyAppAuth;
