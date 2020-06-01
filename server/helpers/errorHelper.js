@@ -11,7 +11,7 @@ class MusicTransferError extends Error {
 class AxiosError extends Error {
   constructor(error) {
     super();
-    this.message = error.response.data.error.message;
+    this.message = error.response.data;
     this.statusCode = error.response.status;
   }
 }

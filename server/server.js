@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const app = express();
 const errorHandler = require("./middlewares/errors");
 const MusicTransferError = require("./helpers/errorHelper").MusicTransferError;
-const authRoutes = require("./routes/app/auth");
+const appRoutes = require("./routes/app/index");
 const spotifyRoutes = require("./routes/spotify/index");
 const HttpErrors = require("./constants/httpErrors");
 
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(morgan("combined"));
 
 //Routes
-app.use(authRoutes);
+app.use(appRoutes);
 app.use(spotifyRoutes);
 
 app.all("*", (req, res, next) => {
