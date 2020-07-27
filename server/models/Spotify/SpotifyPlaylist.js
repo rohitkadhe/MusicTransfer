@@ -1,7 +1,7 @@
 class SpotifyPlaylist {
-  constructor(id, playlistName, owner, images) {
+  constructor(id, name, owner, images) {
     this.id = id;
-    this.playlistName = playlistName;
+    this.name = name;
     this.owner = owner;
     this.images = images;
   }

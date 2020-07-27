@@ -2,8 +2,6 @@ const express = require("express");
 const morgan = require("morgan");
 const app = express();
 const errorHandler = require("./middlewares/errors");
-const MusicTransferError = require("./helpers/errorHelper").MusicTransferError;
-const appRoutes = require("./routes/app/index");
 const spotifyRoutes = require("./routes/spotify/index");
 const HttpErrors = require("./constants/httpErrors");
 
@@ -13,7 +11,6 @@ app.use(express.json());
 app.use(morgan("combined"));
 
 //Routes
-app.use(appRoutes);
 app.use(spotifyRoutes);
 
 app.all("*", (req, res, next) => {
@@ -25,6 +22,6 @@ app.all("*", (req, res, next) => {
   );
 });
 app.use(errorHandler);
-app.listen(process.env.PORT || 3030, () =>
-  console.log(`Started listening on ${process.env.PORT}`)
+app.listen(process.env.PORT, () =>
+  console.log(`Started listening on ${process.env.PORT || 3030}`)
 );

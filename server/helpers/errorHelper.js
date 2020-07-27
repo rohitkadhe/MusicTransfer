@@ -1,13 +1,5 @@
 const HttpErrors = require("../constants/httpErrors");
 
-class MusicTransferError extends Error {
-  constructor(message, statusCode) {
-    super();
-    this.message = message;
-    this.statusCode = statusCode;
-  }
-}
-
 class AxiosError extends Error {
   constructor(error) {
     super();
@@ -32,4 +24,4 @@ const handleError = (err, res) => {
   });
 };
 
-module.exports = { MusicTransferError, AxiosError, handleError };
+module.exports = { AxiosError, handleError };

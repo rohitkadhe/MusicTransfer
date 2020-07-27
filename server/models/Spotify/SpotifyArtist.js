@@ -1,8 +1,8 @@
 class SpotifyArtist {
-  constructor(id, artistName, artistUri) {
+  constructor(id, name, uri) {
     this.id = id;
-    this.artistName = artistName;
-    this.artistUri = artistUri;
+    this.name = name;
+    this.uri = uri;
   }
 }
 module.exports = SpotifyArtist;

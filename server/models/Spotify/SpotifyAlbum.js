@@ -1,7 +1,7 @@
 class SpotifyAlbum {
-  constructor(id, albumName, artists, images) {
+  constructor(id, name, artists, images) {
     this.id = id;
-    this.albumName = albumName;
+    this.name = name;
     this.artists = artists;
     this.images = images;
   }

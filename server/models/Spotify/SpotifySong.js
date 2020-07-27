@@ -1,9 +1,10 @@
 class SpotifySong {
-  constructor(id, songName, trackUri, spotifyAlbum) {
+  constructor(id, name, uri, artists, album) {
     this.id = id;
-    this.songName = songName;
-    this.trackUri = trackUri;
-    this.spotifyAlbum = spotifyAlbum;
+    this.name = name;
+    this.uri = uri;
+    this.artists = artists;
+    this.album = album;
   }
 }
 module.exports = SpotifySong;

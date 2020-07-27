@@ -10,6 +10,9 @@ const URLSearchParams = require("url").URLSearchParams;
 const axios = require("axios");
 const { AxiosError } = require("../helpers/errorHelper");
 const spotifyAPI = require("../constants/spotifyAPI");
+const SpotifyArtist = require("../models/Spotify/SpotifyArtist");
+const SpotifyAlbum = require("../models/Spotify/SpotifyAlbum");
+const SpotifySong = require("../models/Spotify/SpotifySong");
 
 const generateRedirectUri = () => {
   const url = "https://accounts.spotify.com/authorize?";
@@ -39,7 +42,6 @@ const getAccessAndRefreshTokens = async (code) => {
     const tokenUrl = "https://accounts.spotify.com/api/token?";
 
     const response = await axios.post(tokenUrl, queryString);
-
     return response.data;
   } catch (error) {
     throw new AxiosError(error);
@@ -121,11 +123,34 @@ const getUserPlaylistSongs = async (spotify_playlist_id, access_token) => {
         Authorization: `Bearer ${access_token}`,
       },
       params: {
-        fields: "items(track(name, album(name, images, artists), id, uri))",
+        fields: "items(track(name, album(id, name, images, artists), id, uri))",
       },
     };
     const songs = await axios.get(playlistSongsUrl, config);
-    return songs.data;
+    const songsData = songs.data;
+
+    const mappedSongs = songsData.items.map((song) => {
+      const { track } = song;
+      const { album } = track;
+      const spotifyArtists = album.artists.map((artist) => {
+        const { id, name, uri } = artist;
+        return new SpotifyArtist(id, name, uri);
+      });
+      const spotifyAlbum = new SpotifyAlbum(
+        album.id,
+        album.name,
+        spotifyArtists,
+        album.images
+      );
+      return new SpotifySong(
+        track.id,
+        track.name,
+        track.uri,
+        spotifyArtists,
+        spotifyAlbum
+      );
+    });
+    return { songs: mappedSongs };
   } catch (error) {
     throw new AxiosError(error);
   }
@@ -142,8 +167,15 @@ const createPlaylist = async (spotify_user_id, access_token, playlistName) => {
     const params = {
       name: playlistName,
     };
-    const playlists = await axios.post(createPlaylistsUrl, params, auth);
-    return playlists.data;
+    const playlistData = await axios.post(createPlaylistsUrl, params, auth);
+    const { id, name, owner, images } = playlistData.data;
+    const spotifyPlaylist = new SpotifyPlaylist(
+      id,
+      name,
+      new SpotifyUser(owner.id, owner.display_name),
+      images
+    );
+    return spotifyPlaylist;
   } catch (error) {
     throw new AxiosError(error);
   }
@@ -166,7 +198,47 @@ const searchForSong = async (access_token, songName, artist) => {
       params: queryParams,
     };
     const song = await axios.get(searchSongUrl, config);
-    return song.data;
+    const songData = song.data;
+
+    const { items } = songData.tracks;
+    const mappedSongs = items.map((song) => {
+      const { album, artists } = song;
+      const spotifyArtists = artists.map((artist) => {
+        const { id, name, uri } = artist;
+        return new SpotifyArtist(id, name, uri);
+      });
+      const spotifyAlbum = new SpotifyAlbum(
+        album.id,
+        album.name,
+        spotifyArtists,
+        album.images
+      );
+      return new SpotifySong(
+        song.id,
+        song.name,
+        song.uri,
+        spotifyArtists,
+        spotifyAlbum
+      );
+    });
+    return { songs: mappedSongs };
+  } catch (error) {
+    throw new AxiosError(error);
+  }
+};
+const addSong = async (playlistId, uris, access_token) => {
+  try {
+    const addSongUrl = `${spotifyAPI.BASE_URL}/playlists/${playlistId}/tracks`;
+    const auth = {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    };
+    const params = {
+      uris: [uris[0]],
+    };
+    const response = await axios.post(addSongUrl, params, auth);
+    return response.data;
   } catch (error) {
     throw new AxiosError(error);
   }
@@ -181,4 +253,5 @@ module.exports = {
   getUserPlaylistSongs,
   createPlaylist,
   searchForSong,
+  addSong,
 };

@@ -23,7 +23,7 @@ const callback = async (req, res, next) => {
   }
 };
 
-const refreshToken = async (req, res, next) => {
+const refreshAccessToken = async (req, res, next) => {
   try {
     const response = await spotifyUtil.refreshAccessToken(
       req.header(SPOTIFY_AUTH_HEADER)
@@ -70,7 +70,20 @@ const createPlaylist = async (req, res, next) => {
   }
 };
 
-const addSongs = async (req, res, next) => {};
+const addSong = async (req, res, next) => {
+  try {
+    const songUri = req.body.uri;
+    const playlistId = req.params.spotify_playlist_id;
+    const response = await spotifyUtil.addSong(
+      playlistId,
+      songUri,
+      req.header(SPOTIFY_AUTH_HEADER)
+    );
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
 
 const searchForSong = async (req, res, next) => {
   try {
@@ -90,9 +103,10 @@ const searchForSong = async (req, res, next) => {
 module.exports = {
   authenticate,
   callback,
-  refreshToken,
+  refreshAccessToken,
   getUserPlaylists,
   getUserPlaylistSongs,
   createPlaylist,
   searchForSong,
+  addSong,
 };
