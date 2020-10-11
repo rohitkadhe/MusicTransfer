@@ -1,14 +1,13 @@
 const spotifyUtil = require("../utils/spotifyUtil");
-const MusicTransferError = require("../helpers/errorHelper").MusicTransferError;
-const { UNAUTHORIZED } = require("../constants/httpErrors");
 const { SPOTIFY_AUTH_HEADER } = require("../constants/spotifyAPI");
+const { CLIENT_REDIRECT_URI } = require("../constants/spotifyAPI");
 
 const authenticate = async (req, res, next) => {
   try {
     const redirectUrl = spotifyUtil.generateRedirectUri();
-    res.redirect(redirectUrl);
-  } catch (err) {
-    next(new MusicTransferError(err.message, UNAUTHORIZED));
+    return res.redirect(redirectUrl);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -16,8 +15,11 @@ const callback = async (req, res, next) => {
   try {
     const code = req.query.code || null;
     const response = await spotifyUtil.getAccessAndRefreshTokens(code);
-    const user = await spotifyUtil.getUser(response.access_token);
-    res.json({ user, response });
+    const auth = {
+      access_token: response.access_token,
+      refresh_token: response.refresh_token,
+    };
+    res.redirect(CLIENT_REDIRECT_URI + new URLSearchParams(auth).toString());
   } catch (error) {
     next(error);
   }
