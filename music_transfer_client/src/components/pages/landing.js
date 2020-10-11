@@ -1,18 +1,21 @@
 import React from "react";
 import "./landing.css";
-export default function landing() {
+export default function landing(props) {
   return (
-    <div class="ui vertical center aligned segment">
-      <div class="ui text">
-        <h1 class="ui header" id="landing-header">
+    <div className="ui vertical center aligned segment">
+      <div className="ui text">
+        <h1 className="ui header" id="landing-header">
           Welcome to Music Transfer
         </h1>
-        <h2 class="ui text landing-text">
+        <h2 className="ui text landing-text">
           Easily Transfer Songs between Spotify Accounts
         </h2>
-        <button class="ui green huge button ">
-          Get Started<i aria-hidden="true" class="right arrow icon"></i>
-        </button>
+        <a
+          className="ui green huge button "
+          href="http://localhost:5433/spotify/authenticate"
+        >
+          Get Started<i aria-hidden="true" className="right arrow icon"></i>
+        </a>
       </div>
     </div>
   );
