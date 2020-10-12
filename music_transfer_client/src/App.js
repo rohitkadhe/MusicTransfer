@@ -3,7 +3,7 @@ import "./App.css";
 import NavBar from "./components/navBar/NavBar";
 import Landing from "./components/pages/landing/Landing";
 import Particles from "react-particles-js";
-import ParticlesConfig from "./particlesjs-config.json";
+import ParticlesConfig from "./particlesjsConfig.json";
 
 class App extends Component {
   constructor(props) {
@@ -35,8 +35,10 @@ class App extends Component {
     return (
       <div id="App">
         <Particles params={ParticlesConfig} id="particles" />
-        <NavBar />
-        <Landing />
+        <div className="content">
+          <NavBar />
+          <Landing />
+        </div>
       </div>
     );
   }
