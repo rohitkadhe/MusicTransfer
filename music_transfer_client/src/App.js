@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
-import LandingPage from "./components/pages/landing";
+import NavBar from "./components/navBar/NavBar";
+import Landing from "./components/pages/landing/Landing";
 
 class App extends Component {
   constructor(props) {
@@ -30,8 +31,9 @@ class App extends Component {
   render() {
     console.log(this.state);
     return (
-      <div>
-        <LandingPage />
+      <div id="App">
+        <NavBar />
+        <Landing />
       </div>
     );
   }
