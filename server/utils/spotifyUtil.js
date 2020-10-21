@@ -1,11 +1,7 @@
 require("../config/env");
 const SpotifyUser = require("../models/Spotify/SpotifyUser");
 const SpotifyPlaylist = require("../models/Spotify/SpotifyPlaylist");
-const {
-  RESPONSE_TYPE,
-  SCOPES,
-  REDIRECT_URI,
-} = require("../constants/spotifyAPI");
+const { RESPONSE_TYPE, SCOPES } = require("../constants/spotifyAPI");
 const URLSearchParams = require("url").URLSearchParams;
 const axios = require("axios");
 const { AxiosError } = require("../helpers/errorHelper");
@@ -14,20 +10,21 @@ const SpotifyArtist = require("../models/Spotify/SpotifyArtist");
 const SpotifyAlbum = require("../models/Spotify/SpotifyAlbum");
 const SpotifySong = require("../models/Spotify/SpotifySong");
 
-const generateRedirectUri = () => {
+const generateRedirectUri = (account_type) => {
   const url = "https://accounts.spotify.com/authorize?";
   const params = {
     client_id: process.env.SPOTIFY_CLIENT_ID,
     response_type: RESPONSE_TYPE,
-    redirect_uri: REDIRECT_URI,
+    redirect_uri: `http://localhost:${process.env.PORT}/spotify/callback/${account_type}`,
     scope: SCOPES,
+    show_dialog: true,
   };
   const queryString = new URLSearchParams(params).toString();
   const redirectUrl = url + queryString;
   return redirectUrl;
 };
 
-const getAccessAndRefreshTokens = async (code) => {
+const getAccessToken = async (code, account_type) => {
   const client_id = process.env.SPOTIFY_CLIENT_ID;
   const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
   const params = {
@@ -35,7 +32,7 @@ const getAccessAndRefreshTokens = async (code) => {
     client_secret,
     code,
     grant_type: "authorization_code",
-    redirect_uri: REDIRECT_URI,
+    redirect_uri: `http://localhost:${process.env.PORT}/spotify/callback/${account_type}`,
   };
   try {
     const queryString = new URLSearchParams(params).toString();
@@ -44,31 +41,6 @@ const getAccessAndRefreshTokens = async (code) => {
     const response = await axios.post(tokenUrl, queryString);
     return response.data;
   } catch (error) {
-    throw new AxiosError(error);
-  }
-};
-
-const getNewAccessToken = async (refresh_token) => {
-  const client_id = process.env.SPOTIFY_CLIENT_ID;
-  const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
-
-  const queryParams = {
-    client_id,
-    client_secret,
-    grant_type: "refresh_token",
-    refresh_token,
-  };
-  const queryString = new URLSearchParams(queryParams).toString();
-  const tokenUrl = "https://accounts.spotify.com/api/token?";
-  const response = await axios.post(tokenUrl, queryString);
-  return response.data;
-};
-
-const refreshAccessToken = async (refresh_token) => {
-  try {
-    return await getNewAccessToken(refresh_token);
-  } catch (error) {
-    console.log(error);
     throw new AxiosError(error);
   }
 };
@@ -246,8 +218,7 @@ const addSong = async (playlistId, uris, access_token) => {
 
 module.exports = {
   generateRedirectUri,
-  refreshAccessToken,
-  getAccessAndRefreshTokens,
+  getAccessToken,
   getUser,
   getUserPlaylists,
   getUserPlaylistSongs,

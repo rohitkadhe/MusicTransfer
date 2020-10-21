@@ -1,10 +1,10 @@
 const spotifyUtil = require("../utils/spotifyUtil");
 const { SPOTIFY_AUTH_HEADER } = require("../constants/spotifyAPI");
-const { CLIENT_REDIRECT_URI } = require("../constants/spotifyAPI");
 
 const authenticate = async (req, res, next) => {
   try {
-    const redirectUrl = spotifyUtil.generateRedirectUri();
+    const account_type = req.params.account_type;
+    const redirectUrl = spotifyUtil.generateRedirectUri(account_type);
     return res.redirect(redirectUrl);
   } catch (error) {
     next(error);
@@ -13,24 +13,25 @@ const authenticate = async (req, res, next) => {
 
 const callback = async (req, res, next) => {
   try {
+    const account_type = req.params.account_type;
     const code = req.query.code || null;
-    const response = await spotifyUtil.getAccessAndRefreshTokens(code);
+    const response = await spotifyUtil.getAccessToken(code, account_type);
     const auth = {
       access_token: response.access_token,
-      refresh_token: response.refresh_token,
     };
-    res.redirect(CLIENT_REDIRECT_URI + new URLSearchParams(auth).toString());
+    res.redirect(
+      `http://localhost:3000/spotify/${account_type}/authenticated#` +
+        new URLSearchParams(auth).toString()
+    );
   } catch (error) {
     next(error);
   }
 };
-
-const refreshAccessToken = async (req, res, next) => {
+const getUser = async (req, res, next) => {
   try {
-    const response = await spotifyUtil.refreshAccessToken(
-      req.header(SPOTIFY_AUTH_HEADER)
-    );
-    res.json(response);
+    console.log(req.header(SPOTIFY_AUTH_HEADER));
+    const response = await spotifyUtil.getUser(req.header(SPOTIFY_AUTH_HEADER));
+    res.send(response);
   } catch (error) {
     next(error);
   }
@@ -53,6 +54,7 @@ const getUserPlaylistSongs = async (req, res, next) => {
       req.params.spotify_playlist_id,
       req.header(SPOTIFY_AUTH_HEADER)
     );
+
     res.json(response);
   } catch (error) {
     next(error);
@@ -105,10 +107,10 @@ const searchForSong = async (req, res, next) => {
 module.exports = {
   authenticate,
   callback,
-  refreshAccessToken,
   getUserPlaylists,
   getUserPlaylistSongs,
   createPlaylist,
   searchForSong,
   addSong,
+  getUser,
 };
