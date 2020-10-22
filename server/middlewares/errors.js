@@ -1,4 +1,5 @@
-const errorHelper = require("../helpers/errorHelper");
-module.exports = (err, req, res, next) => {
+const errorHelper = require('../helpers/errorHelper');
+
+module.exports = (req, res, next) => {
   errorHelper.handleError(err, res);
 };

@@ -1,10 +1,9 @@
-const spotifyUtil = require("../utils/spotifyUtil");
-const { SPOTIFY_AUTH_HEADER } = require("../constants/spotifyAPI");
+const SpotifyService = require('../services/SpotifyService');
 
 const authenticate = async (req, res, next) => {
   try {
     const account_type = req.params.account_type;
-    const redirectUrl = spotifyUtil.generateRedirectUri(account_type);
+    const redirectUrl = SpotifyService.generateRedirectUri(account_type);
     return res.redirect(redirectUrl);
   } catch (error) {
     next(error);
@@ -15,22 +14,18 @@ const callback = async (req, res, next) => {
   try {
     const account_type = req.params.account_type;
     const code = req.query.code || null;
-    const response = await spotifyUtil.getAccessToken(code, account_type);
+    const response = await SpotifyService.getAccessToken(code, account_type);
     const auth = {
       access_token: response.access_token,
     };
-    res.redirect(
-      `http://localhost:3000/spotify/${account_type}/authenticated#` +
-        new URLSearchParams(auth).toString()
-    );
+    res.redirect(`http://localhost:3000/spotify/${account_type}/authenticated#` + new URLSearchParams(auth).toString());
   } catch (error) {
     next(error);
   }
 };
 const getUser = async (req, res, next) => {
   try {
-    console.log(req.header(SPOTIFY_AUTH_HEADER));
-    const response = await spotifyUtil.getUser(req.header(SPOTIFY_AUTH_HEADER));
+    const response = await SpotifyService.getUser(req.token);
     res.send(response);
   } catch (error) {
     next(error);
@@ -38,10 +33,7 @@ const getUser = async (req, res, next) => {
 };
 const getUserPlaylists = async (req, res, next) => {
   try {
-    const response = await spotifyUtil.getUserPlaylists(
-      req.params.spotify_user_id,
-      req.header(SPOTIFY_AUTH_HEADER)
-    );
+    const response = await SpotifyService.getUserPlaylists(req.params.spotify_user_id, req.token);
     res.json(response);
   } catch (error) {
     next(error);
@@ -50,10 +42,7 @@ const getUserPlaylists = async (req, res, next) => {
 
 const getUserPlaylistSongs = async (req, res, next) => {
   try {
-    const response = await spotifyUtil.getUserPlaylistSongs(
-      req.params.spotify_playlist_id,
-      req.header(SPOTIFY_AUTH_HEADER)
-    );
+    const response = await SpotifyService.getUserPlaylistSongs(req.params.spotify_playlist_id, req.token);
 
     res.json(response);
   } catch (error) {
@@ -63,11 +52,7 @@ const getUserPlaylistSongs = async (req, res, next) => {
 
 const createPlaylist = async (req, res, next) => {
   try {
-    const response = await spotifyUtil.createPlaylist(
-      req.params.spotify_user_id,
-      req.header(SPOTIFY_AUTH_HEADER),
-      req.body.name
-    );
+    const response = await SpotifyService.createPlaylist(req.params.spotify_user_id, req.token, req.body.name);
     res.json(response);
   } catch (error) {
     next(error);
@@ -78,11 +63,7 @@ const addSong = async (req, res, next) => {
   try {
     const songUri = req.body.uri;
     const playlistId = req.params.spotify_playlist_id;
-    const response = await spotifyUtil.addSong(
-      playlistId,
-      songUri,
-      req.header(SPOTIFY_AUTH_HEADER)
-    );
+    const response = await SpotifyService.addSong(playlistId, songUri, req.token);
     res.json(response);
   } catch (error) {
     next(error);
@@ -93,11 +74,7 @@ const searchForSong = async (req, res, next) => {
   try {
     const songName = req.query.songName;
     const artist = req.query.artist;
-    const response = await spotifyUtil.searchForSong(
-      req.header(SPOTIFY_AUTH_HEADER),
-      songName,
-      artist
-    );
+    const response = await SpotifyService.searchForSong(req.token, songName, artist);
     res.json(response);
   } catch (error) {
     next(error);

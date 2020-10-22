@@ -1,17 +1,17 @@
-require("../config/env");
-const SpotifyUser = require("../models/Spotify/SpotifyUser");
-const SpotifyPlaylist = require("../models/Spotify/SpotifyPlaylist");
-const { RESPONSE_TYPE, SCOPES } = require("../constants/spotifyAPI");
-const URLSearchParams = require("url").URLSearchParams;
-const axios = require("axios");
-const { AxiosError } = require("../helpers/errorHelper");
-const spotifyAPI = require("../constants/spotifyAPI");
-const SpotifyArtist = require("../models/Spotify/SpotifyArtist");
-const SpotifyAlbum = require("../models/Spotify/SpotifyAlbum");
-const SpotifySong = require("../models/Spotify/SpotifySong");
+require('../config/env');
+const SpotifyUser = require('../models/Spotify/SpotifyUser');
+const SpotifyPlaylist = require('../models/Spotify/SpotifyPlaylist');
+const { RESPONSE_TYPE, SCOPES } = require('../constants/spotifyAPI');
+const URLSearchParams = require('url').URLSearchParams;
+const axios = require('axios');
+const { AxiosError } = require('../helpers/errorHelper');
+const spotifyAPI = require('../constants/spotifyAPI');
+const SpotifyArtist = require('../models/Spotify/SpotifyArtist');
+const SpotifyAlbum = require('../models/Spotify/SpotifyAlbum');
+const SpotifySong = require('../models/Spotify/SpotifySong');
 
 const generateRedirectUri = (account_type) => {
-  const url = "https://accounts.spotify.com/authorize?";
+  const url = 'https://accounts.spotify.com/authorize?';
   const params = {
     client_id: process.env.SPOTIFY_CLIENT_ID,
     response_type: RESPONSE_TYPE,
@@ -31,12 +31,12 @@ const getAccessToken = async (code, account_type) => {
     client_id,
     client_secret,
     code,
-    grant_type: "authorization_code",
+    grant_type: 'authorization_code',
     redirect_uri: `http://localhost:${process.env.PORT}/spotify/callback/${account_type}`,
   };
   try {
     const queryString = new URLSearchParams(params).toString();
-    const tokenUrl = "https://accounts.spotify.com/api/token?";
+    const tokenUrl = 'https://accounts.spotify.com/api/token?';
 
     const response = await axios.post(tokenUrl, queryString);
     return response.data;
@@ -73,9 +73,7 @@ const getUserPlaylists = async (spotify_user_id, access_token) => {
     };
     const playlists = await axios.get(playlistsUrl, auth);
     const items = playlists.data.items;
-    const usersPlaylists = items.filter(
-      (item) => item.owner.id === spotify_user_id
-    );
+    const usersPlaylists = items.filter((item) => item.owner.id === spotify_user_id);
     const mappedPlaylists = usersPlaylists.map((playlist) => {
       const { id, name, owner, images } = playlist;
       return new SpotifyPlaylist(id, name, owner.display_name, images);
@@ -95,7 +93,7 @@ const getUserPlaylistSongs = async (spotify_playlist_id, access_token) => {
         Authorization: `Bearer ${access_token}`,
       },
       params: {
-        fields: "items(track(name, album(id, name, images, artists), id, uri))",
+        fields: 'items(track(name, album(id, name, images, artists), id, uri))',
       },
     };
     const songs = await axios.get(playlistSongsUrl, config);
@@ -108,19 +106,8 @@ const getUserPlaylistSongs = async (spotify_playlist_id, access_token) => {
         const { id, name, uri } = artist;
         return new SpotifyArtist(id, name, uri);
       });
-      const spotifyAlbum = new SpotifyAlbum(
-        album.id,
-        album.name,
-        spotifyArtists,
-        album.images
-      );
-      return new SpotifySong(
-        track.id,
-        track.name,
-        track.uri,
-        spotifyArtists,
-        spotifyAlbum
-      );
+      const spotifyAlbum = new SpotifyAlbum(album.id, album.name, spotifyArtists, album.images);
+      return new SpotifySong(track.id, track.name, track.uri, spotifyArtists, spotifyAlbum);
     });
     return { songs: mappedSongs };
   } catch (error) {
@@ -141,12 +128,7 @@ const createPlaylist = async (spotify_user_id, access_token, playlistName) => {
     };
     const playlistData = await axios.post(createPlaylistsUrl, params, auth);
     const { id, name, owner, images } = playlistData.data;
-    const spotifyPlaylist = new SpotifyPlaylist(
-      id,
-      name,
-      new SpotifyUser(owner.id, owner.display_name),
-      images
-    );
+    const spotifyPlaylist = new SpotifyPlaylist(id, name, new SpotifyUser(owner.id, owner.display_name), images);
     return spotifyPlaylist;
   } catch (error) {
     throw new AxiosError(error);
@@ -159,9 +141,9 @@ const searchForSong = async (access_token, songName, artist) => {
     const searchQuery = `track:${songName} artist:${artist}`;
     const queryParams = {
       q: searchQuery,
-      type: "track",
-      limit: "1",
-      market: "from_token",
+      type: 'track',
+      limit: '1',
+      market: 'from_token',
     };
     const config = {
       headers: {
@@ -179,19 +161,8 @@ const searchForSong = async (access_token, songName, artist) => {
         const { id, name, uri } = artist;
         return new SpotifyArtist(id, name, uri);
       });
-      const spotifyAlbum = new SpotifyAlbum(
-        album.id,
-        album.name,
-        spotifyArtists,
-        album.images
-      );
-      return new SpotifySong(
-        song.id,
-        song.name,
-        song.uri,
-        spotifyArtists,
-        spotifyAlbum
-      );
+      const spotifyAlbum = new SpotifyAlbum(album.id, album.name, spotifyArtists, album.images);
+      return new SpotifySong(song.id, song.name, song.uri, spotifyArtists, spotifyAlbum);
     });
     return { songs: mappedSongs };
   } catch (error) {
