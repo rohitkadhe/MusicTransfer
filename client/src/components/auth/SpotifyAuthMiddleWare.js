@@ -6,8 +6,8 @@ export default class SpotifyAuthMiddleWare extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      srcAccount: null,
-      destAccount: null,
+      srcAccount: undefined,
+      destAccount: undefined,
     };
   }
 

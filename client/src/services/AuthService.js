@@ -1,10 +1,10 @@
-import axios from "axios";
+import ax from '../axios/axios';
 
 class AuthService {
   getAccessToken() {
     const parsedHash = new URLSearchParams(window.location.hash.substr(1));
 
-    let access_token = parsedHash.get("access_token");
+    let access_token = parsedHash.get('access_token');
 
     return access_token;
   }
@@ -26,19 +26,14 @@ class AuthService {
   async getUser(access_token) {
     try {
       const auth = {
-        headers: {
-          spotifyAuthToken: `${access_token}`,
-        },
+        headers: { Authorization: `Bearer ${access_token}` },
       };
-      let response = await axios.get(
-        "http://localhost:5433/spotify/user",
-        auth
-      );
+      let response = await ax.get('spotify/user', auth);
       let account = response.data;
       account.access_token = access_token;
       return account;
     } catch (err) {
-      return "Error occured ";
+      return err;
     }
   }
 
@@ -52,8 +47,8 @@ class AuthService {
 
   isAuthenticated(account_type) {
     let acc = localStorage.getItem(account_type);
-    if (acc === null || acc === "") return false;
-    if (acc.access_token === "") return false;
+    if (acc === undefined || acc === '') return false;
+    if (acc.access_token === '') return false;
     return true;
   }
 }
