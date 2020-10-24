@@ -1,4 +1,4 @@
-const HttpErrors = require("../constants/httpErrors");
+const HttpErrors = require('../constants/httpErrors');
 
 class AxiosError extends Error {
   constructor(error) {
@@ -14,7 +14,7 @@ const handleError = (err, res) => {
     statusCode = HttpErrors.INTERNAL_SERVER_ERROR;
   }
   if (!message) {
-    message = "Unknown Server Error";
+    message = 'Unknown Server Error';
   }
   res.status(statusCode).json({
     Error: {
