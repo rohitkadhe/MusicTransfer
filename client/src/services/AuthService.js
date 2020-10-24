@@ -12,18 +12,18 @@ class AuthService {
   async authenticateAccount(account_type) {
     const access_token = this.getAccessToken();
     if (access_token) {
-      const user = await this.getUser(access_token);
+      const userAccount = await this.getUserAccount(access_token);
 
-      this.saveAccount(account_type, user);
-      return user;
+      this.saveAccount(account_type, userAccount);
+      return userAccount;
     }
   }
 
-  getCurrentAccount(account_type) {
+  getAccFromLocalStorage(account_type) {
     return JSON.parse(localStorage.getItem(account_type));
   }
 
-  async getUser(access_token) {
+  async getUserAccount(access_token) {
     try {
       const auth = {
         headers: { Authorization: `Bearer ${access_token}` },

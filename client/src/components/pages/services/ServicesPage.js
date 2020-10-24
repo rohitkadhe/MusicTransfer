@@ -1,6 +1,7 @@
-import React from "react";
-import "./servicesPage.css";
-import SpotifyLogo from "../../../icons/spotify.png";
+import React from 'react';
+import './servicesPage.css';
+import SpotifyLogo from '../../../icons/spotify.png';
+
 export default function ServicesPage({ title, account_type }) {
   return (
     <div className="ui grid container center aligned">

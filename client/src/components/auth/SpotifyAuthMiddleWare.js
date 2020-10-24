@@ -1,56 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
+import Loader from 'react-loader-spinner';
 
-export default class SpotifyAuthMiddleWare extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      srcAccount: undefined,
-      destAccount: undefined,
+export default function SpotifyAuthMiddleWare({ account_type, location }) {
+  const [srcAcc, setSrcAcc] = useState(null);
+  const [destAcc, setDestAcc] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const authenticateAccount = async (account_type) => {
+      let userAccount = await AuthService.authenticateAccount(account_type);
+      if (account_type === 'srcAcc' && userAccount) {
+        setSrcAcc(userAccount);
+      } else if (account_type === 'destAcc' && userAccount) {
+        setDestAcc(userAccount);
+        setSrcAcc(AuthService.getAccFromLocalStorage('srcAcc'));
+      }
+      setLoading(false);
     };
-  }
+    authenticateAccount(account_type);
+  }, [account_type]);
 
-  async componentDidMount() {
-    let account = await AuthService.authenticateAccount(this.props.account_type);
-    if (this.props.account_type === 'srcAcc') {
-      this.setState({ srcAccount: account });
-    }
-
-    if (this.props.account_type === 'destAcc') {
-      this.setState({
-        destAccount: account,
-        srcAccount: AuthService.getCurrentAccount('srcAcc'),
-      });
-    }
-  }
-
-  render() {
-    const { srcAccount, destAccount } = this.state;
-    const { account_type } = this.props;
-
-    if (account_type === 'srcAcc' && srcAccount) {
+  const renderRedirectComponent = () => {
+    if (loading) {
       return (
-        <Redirect
-          to={{
-            pathname: '/selectDestination',
-            state: { from: this.props.location },
-          }}
-        />
+        <div className="ui container center aligned ">
+          <Loader type="Oval" color="#21ba45" style={{ marginTop: '20%' }} height={100} width={100} visible={loading} />;
+        </div>
       );
     }
-
-    if (account_type === 'destAcc' && srcAccount && destAccount) {
-      return (
-        <Redirect
-          to={{
-            pathname: `/srcAcc/${srcAccount.id}/playlists`,
-            state: { from: this.props.location },
-          }}
-        />
-      );
-    } else {
-      return <h1>Error Occured</h1>;
+    if (srcAcc && !destAcc) {
+      return <Redirect to={{ pathname: '/selectDestination', state: { from: location } }} />;
     }
-  }
+    if (srcAcc && destAcc) {
+      return <Redirect to={{ pathname: `/srcAcc/${srcAcc.id}/playlists`, state: { from: location } }} />;
+    }
+  };
+
+  return <div>{renderRedirectComponent()}</div>;
 }
