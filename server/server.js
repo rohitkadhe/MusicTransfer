@@ -2,7 +2,6 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
-const errorHandler = require('./middlewares/errors');
 const spotifyRoutes = require('./routes/spotify/index');
 const HttpErrors = require('./constants/httpErrors');
 
@@ -21,5 +20,9 @@ app.all('*', (req, res, next) => {
   };
   next(err);
 });
-app.use(errorHandler);
+
+app.use((err, req, res, next) => {
+  let error = err.response.data.error || { status: 500, message: 'Unknown error' };
+  res.status(error.status).json({ error });
+});
 app.listen(process.env.PORT, () => console.log(`Started listening on ${process.env.PORT || 3030}`));

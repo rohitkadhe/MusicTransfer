@@ -55,6 +55,7 @@ const createPlaylist = async (req, res, next) => {
     const response = await SpotifyService.createPlaylist(req.params.spotify_user_id, req.token, req.body.name);
     res.json(response);
   } catch (error) {
+    console.log(error.response);
     next(error);
   }
 };
