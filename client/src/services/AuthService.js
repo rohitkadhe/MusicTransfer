@@ -47,7 +47,7 @@ class AuthService {
 
   isAuthenticated(account_type) {
     let acc = localStorage.getItem(account_type);
-    if (acc === undefined || acc === '') return false;
+    if (acc === null || acc === '') return false;
     if (acc.access_token === '') return false;
     return true;
   }

@@ -1,0 +1,20 @@
+#header {
+  font-size: 4em;
+  margin-top: 2rem;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+#list-text {
+  padding: 1em;
+  font-size: medium;
+  font-weight: 400;
+}
+
+#vertically-center {
+  margin-top: 2em;
+}
+.ui.list {
+  height: 40em;
+  overflow: auto;
+}
