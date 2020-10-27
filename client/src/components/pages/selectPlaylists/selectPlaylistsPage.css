@@ -16,5 +16,5 @@
 }
 .ui.list {
   max-height: 40em;
-  overflow: scroll;
+  overflow: auto;
 }
