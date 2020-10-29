@@ -7,7 +7,7 @@ export default function LandingPage({ location }) {
     <div className="ui container center aligned ">
       <div className="ui text">
         <h1 id="landing-header">Welcome to Music Transfer</h1>
-        <h2 className="ui text landing-text">Easily Transfer Songs between Spotify Accounts</h2>
+        <h2 className="ui text landing-text">Easily Transfer Playlists Between Spotify Accounts</h2>
         <Link
           className="ui green huge button "
           to={{

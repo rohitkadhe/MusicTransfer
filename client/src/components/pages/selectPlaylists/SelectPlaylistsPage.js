@@ -5,11 +5,24 @@ import MusicTransferLoader from '../../loader/MusicTransferLoader';
 import AuthService from '../../../services/AuthService';
 import { useAxiosGet } from '../../../hooks/useAxios';
 import SpotifyLogo from '../../../icons/spotify.png';
+
 export default function SelectPlaylistsPage({ location }) {
   const [srcAcc] = useState(AuthService.getAccFromLocalStorage('srcAcc'));
+  const [playlists, setPlaylists] = useState({});
   const auth = {
     headers: { Authorization: `Bearer ${srcAcc.access_token}` },
   };
+
+  function handleCheckboxClick(e, playlist, index) {
+    if (e.target.checked) {
+      playlists[index] = playlist;
+      setPlaylists({ ...playlists });
+    } else {
+      delete playlists[index];
+      setPlaylists({ ...playlists });
+    }
+  }
+
   const [response, error, isLoading] = useAxiosGet({ url: `/spotify/${srcAcc.id}/playlists`, config: auth });
   if (isLoading) {
     return <MusicTransferLoader />;
@@ -17,7 +30,7 @@ export default function SelectPlaylistsPage({ location }) {
   if (error) {
     return <div>Error</div>;
   } else {
-    const renderResults = response.map((playlist) => {
+    const renderResults = response.map((playlist, index) => {
       const imageUrl = playlist.images.length === 3 ? playlist.images[2].url : SpotifyLogo;
       return (
         <div className="item" key={playlist.id}>
@@ -26,8 +39,8 @@ export default function SelectPlaylistsPage({ location }) {
             {playlist.name}
           </div>
           <div className="right floated content" id="vertically-center">
-            <div className="ui checkbox">
-              <input type="checkbox" tabIndex="0" />
+            <div className="ui toggle checkbox">
+              <input id="toggle-input" type="checkbox" tabIndex="0" onChange={(e) => handleCheckboxClick(e, playlist, index)} />
               <label></label>
             </div>
           </div>
@@ -36,18 +49,21 @@ export default function SelectPlaylistsPage({ location }) {
     });
     return (
       <>
-        <div className="ui heading" id="header">
-          Select Playlists to Transfer
+        <div className="ui container header" id="header-text">
+          Select Playlists To Transfer
         </div>
         <div className="ui segment container">
           <div className="ui middle aligned relaxed divided list scrolling content">{renderResults}</div>
         </div>
         <div className="ui container">
           <Link
-            className="ui green huge button "
+            className={`ui green huge button ${Object.keys(playlists).length === 0 ? ' disabled' : ''}`}
             to={{
               pathname: '/selectDestination',
               state: { prevPath: location.pathname },
+            }}
+            onClick={() => {
+              localStorage.setItem('playlists', JSON.stringify(playlists));
             }}
           >
             Next<i aria-hidden="true" className="right arrow icon"></i>

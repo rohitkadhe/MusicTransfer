@@ -1,14 +1,13 @@
-#header {
-  font-size: 4em;
-  margin-top: 2rem;
-  margin-bottom: 1em;
-  text-align: center;
+#header-text {
+  font-size: 2em;
+  margin-top: 2em;
 }
 
 #list-text {
   padding: 1em;
-  font-size: medium;
-  font-weight: 400;
+  font-size: large;
+  font-weight: 600;
+  /* text-transform: uppercase; */
 }
 
 #vertically-center {
@@ -17,4 +16,8 @@
 .ui.list {
   max-height: 40em;
   overflow: auto;
+}
+
+#toggle-input:checked + label::before {
+  background-color: #21ba45 !important;
 }
