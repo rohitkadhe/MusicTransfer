@@ -27,9 +27,9 @@ export default function SpotifyAuthMiddleWare({ account_type, location }) {
     if (isLoading) {
       return <MusicTransferLoader visible={isLoading} />;
     } else if (srcAcc && !destAcc) {
-      return <Redirect to={{ pathname: `/srcAcc/${srcAcc.id}/playlists`, state: { from: location } }} />;
+      return <Redirect to={{ pathname: `/${account_type}/spotify/${srcAcc.id}/playlists`, state: { from: location } }} />;
     } else if (srcAcc && destAcc) {
-      return <Redirect to={{ pathname: `/destAcc/confirmTransfer`, state: { from: location } }} />;
+      return <Redirect to={{ pathname: `/${account_type}/spotify/confirmTransfer`, state: { from: location } }} />;
     }
   };
 

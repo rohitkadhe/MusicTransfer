@@ -8,18 +8,18 @@ import SpotifyLogo from '../../../icons/spotify.png';
 
 export default function SelectPlaylistsPage({ location }) {
   const [srcAcc] = useState(AuthService.getAccFromLocalStorage('srcAcc'));
-  const [playlists, setPlaylists] = useState({});
+  const [playlists, setPlaylists] = useState([]);
   const auth = {
     headers: { Authorization: `Bearer ${srcAcc.access_token}` },
   };
 
   function handleCheckboxClick(e, playlist, index) {
     if (e.target.checked) {
-      playlists[index] = playlist;
-      setPlaylists({ ...playlists });
+      let newArr = [...playlists, playlist];
+      setPlaylists(newArr);
     } else {
-      delete playlists[index];
-      setPlaylists({ ...playlists });
+      let filteredPlaylists = playlists.filter((p) => p.id !== playlist.id);
+      setPlaylists(filteredPlaylists);
     }
   }
 
@@ -53,7 +53,7 @@ export default function SelectPlaylistsPage({ location }) {
           Select Playlists To Transfer
         </div>
         <div className="ui segment container">
-          <div className="ui middle aligned relaxed divided list scrolling content">{renderResults}</div>
+          <div className="ui middle aligned relaxed divided list">{renderResults}</div>
         </div>
         <div className="ui container">
           <Link
@@ -63,7 +63,7 @@ export default function SelectPlaylistsPage({ location }) {
               state: { prevPath: location.pathname },
             }}
             onClick={() => {
-              localStorage.setItem('playlists', JSON.stringify(playlists));
+              localStorage.setItem('selectedPlaylists', JSON.stringify(playlists));
             }}
           >
             Next<i aria-hidden="true" className="right arrow icon"></i>

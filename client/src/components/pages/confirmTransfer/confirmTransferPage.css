@@ -7,16 +7,9 @@
   padding: 1em;
   font-size: large;
   font-weight: 600;
+  /* text-transform: uppercase; */
 }
 
 #vertically-center {
   margin-top: 2em;
-}
-.ui.list {
-  max-height: 40em;
-  overflow: auto;
-}
-
-#toggle-input:checked + label::before {
-  background-color: #21ba45 !important;
 }

@@ -18,3 +18,8 @@
 .content {
   position: relative;
 }
+
+.ui.list {
+  max-height: 40em;
+  overflow: auto;
+}
