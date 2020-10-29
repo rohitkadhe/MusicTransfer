@@ -19,7 +19,25 @@
   position: relative;
 }
 
+.list-text {
+  padding: 1em;
+  font-size: medium;
+}
+
+.vertically-center {
+  margin-top: 2em !important;
+}
 .ui.list {
   max-height: 40em;
-  overflow: auto;
+  overflow-y: auto;
+}
+/* So that it appears green during transition */
+.ui.toggle.checkbox.color-green input:focus-visible:checked ~ .box:before,
+.ui.toggle.checkbox.color-green input:focus-visible:checked ~ label:before {
+  background: #21ba45 !important;
+}
+/* So that it stays green after being checked */
+.ui.toggle.checkbox.color-green input:checked ~ .box:before,
+.ui.toggle.checkbox.color-green input:checked ~ label:before {
+  background: #21ba45 !important;
 }

@@ -6,11 +6,11 @@ import Routes from './routes/routes';
 
 import './App.css';
 
-function App() {
+function App({ history }) {
   return (
     <div id="App">
       <Particles params={ParticlesConfig} id="particles" />
-      <NavBar />
+      <NavBar history={history} />
       <div className="content">
         <Routes />
       </div>

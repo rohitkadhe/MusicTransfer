@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './confirmTransferPage.css';
 import SpotifyLogo from '../../../icons/spotify.png';
+import { Grid, List, Header, Segment, Button, Image, Checkbox } from 'semantic-ui-react';
 
-export default function SelectPlaylistsPage({ location }) {
+export default function SelectPlaylistsPage({ history, location }) {
   const playlists = JSON.parse(localStorage.getItem('selectedPlaylists'));
   const [numCheckedBoxes, setNumCheckedBoxes] = useState(0);
-  const renderResults = playlists.map((playlist) => {
+
+  const renderResults = Object.values(playlists).map((playlist) => {
     const imageUrl = playlist.images.length === 3 ? playlist.images[2].url : SpotifyLogo;
     return (
-      <div className="item" key={playlist.id}>
-        <img className="ui tiny circular image" alt="Spotify Playlist Logos" src={imageUrl} />
-        <div className="content" id="list-text">
-          {playlist.name}
-        </div>
-        <div className="right floated content" id="vertically-center">
-          <div className="ui toggle checkbox">
-            <input id="toggle-input" type="checkbox" tabIndex="0" onChange={(e) => handleCheckboxClick(e, playlist)} />
-            <label></label>
-          </div>
-        </div>
-      </div>
+      <List.Item key={playlist.name}>
+        <List.Content className="vertically-center" floated="right">
+          <Checkbox className="color-green" toggle onChange={(e, data) => handleCheckboxClick(e, data, playlist)} />
+        </List.Content>
+        <Image circular src={imageUrl} floated="left" />
+        <List.Content floated="left">
+          <List.Header className="list-text">{playlist.name}</List.Header>
+        </List.Content>
+      </List.Item>
     );
   });
-  function handleCheckboxClick(e, playlist) {
-    if (e.target.checked) {
+  function handleCheckboxClick(e, data) {
+    if (data.checked) {
       setNumCheckedBoxes(numCheckedBoxes + 1);
     } else {
       setNumCheckedBoxes(numCheckedBoxes - 1);
@@ -32,24 +29,32 @@ export default function SelectPlaylistsPage({ location }) {
   }
 
   return (
-    <>
-      <div className="ui container header" id="header-text">
-        Confirm Playlists To Transfer
-      </div>
-      <div className="ui container segment">
-        <div className="ui middle aligned relaxed divided list">{renderResults}</div>
-      </div>
-      <div className="ui container">
-        <Link
-          className={`ui green huge button ${Object.keys(playlists).length !== numCheckedBoxes ? ' disabled' : ''}`}
-          to={{
-            pathname: '/transfer',
-            state: { prevPath: location.pathname, selectedPlaylists: { ...playlists } },
-          }}
+    <Grid container textAlign="center">
+      <Grid.Row>
+        <Header as="h1">Select Playlists To Transfer</Header>
+      </Grid.Row>
+      <Grid.Row>
+        <Segment>
+          <List relaxed="very" divided verticalAlign="middle" style={{ padding: '1rem' }}>
+            {renderResults}
+          </List>
+        </Segment>
+      </Grid.Row>
+      <Grid.Row>
+        <Button
+          color="green"
+          size="huge"
+          disabled={numCheckedBoxes !== Object.values(playlists).length}
+          onClick={() =>
+            history.push({
+              pathname: '/transfer',
+              state: { prevPath: location.pathname, selectedPlaylists: { ...playlists } },
+            })
+          }
         >
-          Confirm Transfer<i aria-hidden="true" className="right arrow icon"></i>
-        </Link>
-      </div>
-    </>
+          Confirm Transfer
+        </Button>
+      </Grid.Row>
+    </Grid>
   );
 }
