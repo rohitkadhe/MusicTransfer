@@ -1,16 +1,17 @@
-import React, { Component } from "react";
-import MusicLogo from "../../icons/musicTransferLogo.png";
-import "./navBar.css";
+import React, { Component } from 'react';
+import MusicLogo from '../../icons/musicTransferLogo.png';
+import { Menu } from 'semantic-ui-react';
+import './navBar.css';
 
 export default class NavBar extends Component {
   render() {
     return (
-      <div className="ui secondary menu">
-        <a className="item" id="nav-text" href="http://localhost:3000">
+      <Menu secondary>
+        <Menu.Item id="nav-text" name="Music Transfer">
           <img src={MusicLogo} alt="Logo" />
           Music Transfer
-        </a>
-      </div>
+        </Menu.Item>
+      </Menu>
     );
   }
 }
