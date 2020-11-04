@@ -9,7 +9,8 @@ router.get('/spotify/:spotify_user_id/playlists', verifyToken, spotifyController
 router.get('/spotify/user', verifyToken, spotifyController.getUser);
 router.post('/spotify/:spotify_user_id/playlists', verifyToken, spotifyController.createPlaylist);
 router.get('/spotify/:spotify_user_id/playlists/:spotify_playlist_id/songs', verifyToken, spotifyController.getUserPlaylistSongs);
-router.post('/spotify/:spotify_user_id/playlists/:spotify_playlist_id/songs', verifyToken, spotifyController.addSong);
+
+router.post('/spotify/:spotify_user_id/playlists/:spotify_playlist_id/songs', verifyToken, spotifyController.addSongs);
 router.get('/spotify/search', verifyToken, spotifyController.searchForSong);
 
 module.exports = router;

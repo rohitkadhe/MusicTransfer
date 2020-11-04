@@ -22,7 +22,19 @@ app.all('*', (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  let error = err.response.data.error || { status: 500, message: 'Unknown error' };
-  res.status(error.status).json({ error });
+  let error = '';
+
+  if (err.message && err.statusCode) {
+    error = { status: err.statusCode, message: err.message };
+  }
+  if (err.response && err.response.data) {
+    error = err.response.data.error;
+  }
+  if (error.status === undefined) {
+    error.status = 500;
+    error.message = 'Internal server error';
+  }
+  console.log(error);
+  res.status(error.status).json(error);
 });
 app.listen(process.env.PORT, () => console.log(`Started listening on ${process.env.PORT || 3030}`));

@@ -18,7 +18,10 @@ const callback = async (req, res, next) => {
     const auth = {
       access_token: response.access_token,
     };
-    res.redirect(`http://localhost:3000/spotify/${account_type}/authenticated#` + new URLSearchParams(auth).toString());
+    res.redirect(
+      `http://localhost:3000/spotify/${account_type}/authenticated#` +
+        new URLSearchParams(auth).toString(),
+    );
   } catch (error) {
     next(error);
   }
@@ -42,8 +45,7 @@ const getUserPlaylists = async (req, res, next) => {
 
 const getUserPlaylistSongs = async (req, res, next) => {
   try {
-    const response = await SpotifyService.getUserPlaylistSongs(req.params.spotify_playlist_id, req.token);
-
+    const response = await SpotifyService.getUserPlaylistSongs(req.params, req.query, req.token);
     res.json(response);
   } catch (error) {
     next(error);
@@ -52,19 +54,22 @@ const getUserPlaylistSongs = async (req, res, next) => {
 
 const createPlaylist = async (req, res, next) => {
   try {
-    const response = await SpotifyService.createPlaylist(req.params.spotify_user_id, req.token, req.body.name);
+    const response = await SpotifyService.createPlaylist(
+      req.params.spotify_user_id,
+      req.token,
+      req.body.name,
+    );
     res.json(response);
   } catch (error) {
-    console.log(error.response);
     next(error);
   }
 };
 
-const addSong = async (req, res, next) => {
+const addSongs = async (req, res, next) => {
   try {
-    const songUri = req.body.uri;
+    const songUris = req.body.uris;
     const playlistId = req.params.spotify_playlist_id;
-    const response = await SpotifyService.addSong(playlistId, songUri, req.token);
+    const response = await SpotifyService.addSongs(playlistId, songUris, req.token);
     res.json(response);
   } catch (error) {
     next(error);
@@ -89,6 +94,6 @@ module.exports = {
   getUserPlaylistSongs,
   createPlaylist,
   searchForSong,
-  addSong,
+  addSongs,
   getUser,
 };

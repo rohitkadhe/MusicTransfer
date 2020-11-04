@@ -76,7 +76,10 @@ const getUserPlaylists = async (spotify_user_id, access_token) => {
   return mappedPlaylists;
 };
 
-const getUserPlaylistSongs = async (spotify_playlist_id, access_token) => {
+const getUserPlaylistSongs = async (request_params, query_params, access_token) => {
+  let { spotify_playlist_id } = request_params;
+  let { offset } = query_params;
+
   const playlistSongsUrl = `${spotifyAPI.BASE_URL}/playlists/${spotify_playlist_id}/tracks`;
 
   const config = {
@@ -85,6 +88,7 @@ const getUserPlaylistSongs = async (spotify_playlist_id, access_token) => {
     },
     params: {
       fields: 'items(track(name, album(id, name, images, artists), id, uri))',
+      offset: offset,
     },
   };
   const songs = await axios.get(playlistSongsUrl, config);
@@ -120,7 +124,12 @@ const createPlaylist = async (spotify_user_id, access_token, playlistName) => {
   const playlistData = await axios.post(createPlaylistsUrl, body, auth);
 
   const { id, name, owner, images } = playlistData.data;
-  const spotifyPlaylist = new SpotifyPlaylist(id, name, new SpotifyUser(owner.id, owner.display_name), images);
+  const spotifyPlaylist = new SpotifyPlaylist(
+    id,
+    name,
+    new SpotifyUser(owner.id, owner.display_name),
+    images,
+  );
 
   return spotifyPlaylist;
 };
@@ -160,17 +169,15 @@ const searchForSong = async (access_token, songName, artist) => {
   return { songs: mappedSongs };
 };
 
-const addSong = async (playlistId, uris, access_token) => {
+const addSongs = async (playlistId, uris, access_token) => {
   const addSongUrl = `${spotifyAPI.BASE_URL}/playlists/${playlistId}/tracks`;
   const auth = {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
   };
-  const params = {
-    uris: [uris[0]],
-  };
-  const response = await axios.post(addSongUrl, params, auth);
+  const body = { uris: uris };
+  const response = await axios.post(addSongUrl, body, auth);
   return response.data;
 };
 
@@ -182,5 +189,5 @@ module.exports = {
   getUserPlaylistSongs,
   createPlaylist,
   searchForSong,
-  addSong,
+  addSongs,
 };

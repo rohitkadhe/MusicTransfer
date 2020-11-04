@@ -1,13 +1,14 @@
 const verifyToken = (req, res, next) => {
   authorization_header = req.headers.authorization;
-  if (authorization_header !== 'undefined') {
+  try {
     const headerContents = authorization_header.split(' ');
     const token = headerContents[1];
     req.token = token;
-  } else {
+    next();
+  } catch (err) {
     req.token = '';
+    next({ statusCode: 401, message: '401 Unauthorized' });
   }
-  next();
 };
 
 module.exports = verifyToken;
