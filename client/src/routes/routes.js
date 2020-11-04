@@ -5,27 +5,47 @@ import SpotifyAuthMiddleWare from '../components/auth/SpotifyAuthMiddleWare';
 import LandingPage from '../components/pages/landing/LandingPage';
 import ServicesPage from '../components/pages/services/ServicesPage';
 import SelectPlaylistsPage from '../components/pages/selectPlaylists/SelectPlaylistsPage';
-import ConfirmTransfer from '../components/pages/confirmTransfer/ConfirmTransferPage';
+import TransferSongsPage from '../components/pages/transferSongs/TransferSongsPage';
 
-export default function Routes({ srcAcc, destAcc }) {
+export default function Routes() {
   return (
     <Switch>
       <Route exact path="/" component={(props) => <LandingPage {...props} />} />
       <Route
         exact
         path="/selectSource"
-        component={(props) => <ServicesPage {...props} account_type={'srcAcc'} title={`Select the Source Account`} />}
+        component={(props) => (
+          <ServicesPage {...props} account_type={'srcAcc'} title={`Select the Source Account`} />
+        )}
       />
-      <Route exact path="/spotify/srcAcc/:access_token" component={(props) => <SpotifyAuthMiddleWare {...props} account_type="srcAcc" />} />
-      <Route exact path="/spotify/destAcc/:access_token" component={(props) => <SpotifyAuthMiddleWare {...props} account_type="destAcc" />} />
+      <Route
+        exact
+        path="/spotify/srcAcc/:access_token"
+        component={(props) => <SpotifyAuthMiddleWare {...props} account_type="srcAcc" />}
+      />
+      <Route
+        exact
+        path="/spotify/destAcc/:access_token"
+        component={(props) => <SpotifyAuthMiddleWare {...props} account_type="destAcc" />}
+      />
       <Route
         exact
         path="/selectDestination"
-        component={(props) => <ServicesPage {...props} account_type="destAcc" title="Select the Destination account" />}
+        component={(props) => (
+          <ServicesPage {...props} account_type="destAcc" title="Select the Destination account" />
+        )}
       />
-      <Route exact path="/srcAcc/spotify/:spotify_user_id/playlists" component={(props) => <SelectPlaylistsPage {...props} srcAcc={srcAcc} />} />
-      <ProtectedRoute exact path="/destAcc/spotify/confirmTransfer" component={(props) => <ConfirmTransfer {...props} />} />
-      {/* <Route path="*" component={() => <Redirect to="/" />} /> */}
+      <Route
+        exact
+        path="/srcAcc/spotify/:spotify_user_id/playlists"
+        component={(props) => <SelectPlaylistsPage {...props} />}
+      />
+      <ProtectedRoute
+        exact
+        path="/destAcc/spotify/transfer"
+        component={(props) => <TransferSongsPage {...props} />}
+      />
+      {/* /* <Route path="*" component={() => <Redirect to="/" />} /> */}
     </Switch>
   );
 }

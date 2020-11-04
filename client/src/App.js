@@ -8,7 +8,7 @@ import './App.css';
 
 function App({ history }) {
   return (
-    <div id="App">
+    <div id="app">
       <Particles params={ParticlesConfig} id="particles" />
       <NavBar history={history} />
       <div className="content">
