@@ -9,18 +9,18 @@ class AuthService {
     return access_token;
   }
 
-  async authenticateAccount(account_type) {
+  async authenticateAccount(accType) {
     const access_token = this.getAccessToken();
     if (access_token) {
       const userAccount = await this.getUserAccount(access_token);
 
-      this.saveAccount(account_type, userAccount);
+      this.saveAccount(accType, userAccount);
       return userAccount;
     }
   }
 
-  getAccFromSessionStorage(account_type) {
-    return JSON.parse(sessionStorage.getItem(account_type));
+  getAccFromSessionStorage(accType) {
+    return JSON.parse(sessionStorage.getItem(accType));
   }
 
   async getUserAccount(access_token) {
@@ -41,8 +41,8 @@ class AuthService {
     sessionStorage.setItem(type, JSON.stringify(account));
   }
 
-  isAuthenticated(account_type) {
-    let acc = JSON.parse(sessionStorage.getItem(account_type));
+  isAuthenticated(accType) {
+    let acc = JSON.parse(sessionStorage.getItem(accType));
     if (acc === null || acc === '') return false;
     if (acc.access_token === '') return false;
     return true;

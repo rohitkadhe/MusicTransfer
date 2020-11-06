@@ -4,7 +4,7 @@ import SpotifyLogo from '../../../icons/spotify.png';
 import { Grid, Card, Header, Image } from 'semantic-ui-react';
 import AuthService from '../../../services/AuthService';
 
-export default function ServicesPage({ title, account_type, history, location }) {
+export default function ServicesPage({ title, accType, history, location }) {
   function openCenteredPopup(url, title, w, h) {
     var left = window.screen.width / 2 - w / 2;
     var top = window.screen.height / 2 - h / 2;
@@ -13,15 +13,14 @@ export default function ServicesPage({ title, account_type, history, location })
 
   const authenticateOnClick = () => {
     let popup = openCenteredPopup(
-      `http://localhost:5433/spotify/authenticate/${account_type}`,
+      `http://localhost:5433/spotify/authenticate/${accType}`,
       'Login with Spotify',
       500,
       800,
     );
-    const spotifyCallback = (url, account_type, userAccount) => {
+    const spotifyCallback = (url, accType, userAccount) => {
       popup.close();
-      AuthService.saveAccount(account_type, userAccount);
-      console.log('i ran');
+      AuthService.saveAccount(accType, userAccount);
       history.push(url);
     };
     window.spotifyCallback = spotifyCallback;

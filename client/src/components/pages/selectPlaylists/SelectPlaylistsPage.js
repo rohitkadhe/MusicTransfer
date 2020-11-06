@@ -31,7 +31,7 @@ export default function SelectPlaylistsPage({ history, location }) {
   if (error) {
     return <div>Error</div>;
   } else {
-    const renderResults = response.map((playlist, index) => {
+    const renderResults = response.map((playlist) => {
       const imageUrl = playlist.images.length > 0 ? playlist.images[0].url : SpotifyLogo;
       return (
         <List.Item key={playlist.id}>

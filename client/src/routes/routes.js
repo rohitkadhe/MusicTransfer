@@ -15,24 +15,24 @@ export default function Routes() {
         exact
         path="/selectSource"
         component={(props) => (
-          <ServicesPage {...props} account_type={'srcAcc'} title={`Select the Source Account`} />
+          <ServicesPage {...props} accType={'srcAcc'} title={`Select the Source Account`} />
         )}
       />
       <Route
         exact
         path="/spotify/srcAcc/:access_token"
-        component={(props) => <SpotifyAuthMiddleWare {...props} account_type="srcAcc" />}
+        component={(props) => <SpotifyAuthMiddleWare {...props} accType="srcAcc" />}
       />
       <Route
         exact
         path="/spotify/destAcc/:access_token"
-        component={(props) => <SpotifyAuthMiddleWare {...props} account_type="destAcc" />}
+        component={(props) => <SpotifyAuthMiddleWare {...props} accType="destAcc" />}
       />
       <Route
         exact
         path="/selectDestination"
         component={(props) => (
-          <ServicesPage {...props} account_type="destAcc" title="Select the Destination account" />
+          <ServicesPage {...props} accType="destAcc" title="Select the Destination account" />
         )}
       />
       <Route
