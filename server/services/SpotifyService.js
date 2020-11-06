@@ -9,12 +9,12 @@ const SpotifyArtist = require('../models/Spotify/SpotifyArtist');
 const SpotifyAlbum = require('../models/Spotify/SpotifyAlbum');
 const SpotifySong = require('../models/Spotify/SpotifySong');
 
-const generateRedirectUri = (account_type) => {
+const generateRedirectUri = (accType) => {
   const url = 'https://accounts.spotify.com/authorize?';
   const params = {
     client_id: process.env.SPOTIFY_CLIENT_ID,
     response_type: RESPONSE_TYPE,
-    redirect_uri: `http://localhost:${process.env.PORT}/spotify/callback/${account_type}`,
+    redirect_uri: `http://localhost:${process.env.PORT}/spotify/callback/${accType}`,
     scope: SCOPES,
     show_dialog: true,
   };
@@ -24,7 +24,7 @@ const generateRedirectUri = (account_type) => {
   return redirectUrl;
 };
 
-const getAccessToken = async (code, account_type) => {
+const getAccessToken = async (code, accType) => {
   const client_id = process.env.SPOTIFY_CLIENT_ID;
   const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
   const params = {
@@ -32,7 +32,7 @@ const getAccessToken = async (code, account_type) => {
     client_secret,
     code,
     grant_type: 'authorization_code',
-    redirect_uri: `http://localhost:${process.env.PORT}/spotify/callback/${account_type}`,
+    redirect_uri: `http://localhost:${process.env.PORT}/spotify/callback/${accType}`,
   };
 
   const queryString = new URLSearchParams(params).toString();

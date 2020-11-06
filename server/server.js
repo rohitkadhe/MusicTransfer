@@ -34,7 +34,6 @@ app.use((err, req, res, next) => {
     error.status = 500;
     error.message = 'Internal server error';
   }
-  console.log(error);
   res.status(error.status).json(error);
 });
 app.listen(process.env.PORT, () => console.log(`Started listening on ${process.env.PORT || 3030}`));

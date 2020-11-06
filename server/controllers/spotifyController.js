@@ -2,8 +2,8 @@ const SpotifyService = require('../services/SpotifyService');
 
 const authenticate = async (req, res, next) => {
   try {
-    const account_type = req.params.account_type;
-    const redirectUrl = SpotifyService.generateRedirectUri(account_type);
+    const accType = req.params.accType;
+    const redirectUrl = SpotifyService.generateRedirectUri(accType);
     return res.redirect(redirectUrl);
   } catch (error) {
     next(error);
@@ -12,14 +12,14 @@ const authenticate = async (req, res, next) => {
 
 const callback = async (req, res, next) => {
   try {
-    const account_type = req.params.account_type;
+    const accType = req.params.accType;
     const code = req.query.code || null;
-    const response = await SpotifyService.getAccessToken(code, account_type);
+    const response = await SpotifyService.getAccessToken(code, accType);
     const auth = {
       access_token: response.access_token,
     };
     res.redirect(
-      `http://localhost:3000/spotify/${account_type}/authenticated#` +
+      `http://localhost:3000/spotify/${accType}/authenticated#` +
         new URLSearchParams(auth).toString(),
     );
   } catch (error) {
