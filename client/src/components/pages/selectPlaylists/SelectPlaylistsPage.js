@@ -6,7 +6,7 @@ import SpotifyLogo from '../../../icons/spotify.png';
 import { Grid, List, Header, Button, Image, Checkbox } from 'semantic-ui-react';
 
 export default function SelectPlaylistsPage({ history, location }) {
-  const srcAcc = AuthService.getAccFromsessionStorage('srcAcc');
+  const srcAcc = AuthService.getAccFromSessionStorage('srcAcc');
   const [playlists, setPlaylists] = useState([]);
   const auth = {
     headers: { Authorization: `Bearer ${srcAcc.access_token}` },

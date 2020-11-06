@@ -22,9 +22,10 @@
   max-height: 40em;
   overflow-y: auto;
 }
+
 /* So that it appears green during transition */
-.ui.toggle.checkbox.color-green input:focus-visible:checked ~ .box:before,
-.ui.toggle.checkbox.color-green input:focus-visible:checked ~ label:before {
+.ui.toggle.checkbox.color-green input:focus:checked ~ .box:before,
+.ui.toggle.checkbox.color-green input:focus:checked ~ label:before {
   background: #21ba45 !important;
 }
 /* So that it stays green after being checked */

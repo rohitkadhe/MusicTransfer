@@ -19,7 +19,7 @@ class AuthService {
     }
   }
 
-  getAccFromsessionStorage(account_type) {
+  getAccFromSessionStorage(account_type) {
     return JSON.parse(sessionStorage.getItem(account_type));
   }
 
@@ -39,10 +39,6 @@ class AuthService {
 
   saveAccount(type, account) {
     sessionStorage.setItem(type, JSON.stringify(account));
-  }
-
-  clearsessionStorage() {
-    sessionStorage.clear();
   }
 
   isAuthenticated(account_type) {

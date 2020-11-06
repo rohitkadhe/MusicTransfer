@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import SpotifyAuthMiddleWare from '../components/auth/SpotifyAuthMiddleWare';
 import LandingPage from '../components/pages/landing/LandingPage';
@@ -45,7 +45,7 @@ export default function Routes() {
         path="/destAcc/spotify/transfer"
         component={(props) => <TransferSongsPage {...props} />}
       />
-      {/* /* <Route path="*" component={() => <Redirect to="/" />} /> */}
+      <Route path="*" component={() => <Redirect to="/" />} />
     </Switch>
   );
 }

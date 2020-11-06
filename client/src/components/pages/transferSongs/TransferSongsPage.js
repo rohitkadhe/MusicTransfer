@@ -5,8 +5,8 @@ import ax from '../../../axios/axios';
 
 export default class TransferSongsPage extends React.Component {
   constructor(props) {
-    const srcAcc = AuthService.getAccFromsessionStorage('srcAcc');
-    const destAcc = AuthService.getAccFromsessionStorage('destAcc');
+    const srcAcc = AuthService.getAccFromSessionStorage('srcAcc');
+    const destAcc = AuthService.getAccFromSessionStorage('destAcc');
     const selectedPlaylists = JSON.parse(sessionStorage.getItem('selectedPlaylists'));
 
     super(props);
@@ -156,6 +156,7 @@ export default class TransferSongsPage extends React.Component {
       progressText,
       transferConfirmed,
     } = this.state;
+
     if (error) {
       return <div> Error</div>;
     }

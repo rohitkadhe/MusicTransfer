@@ -1,9 +1,10 @@
 import React from 'react';
 import Loader from 'react-loader-spinner';
+import { Grid } from 'semantic-ui-react';
 
 export default function MusicTransferLoader({ visible }) {
   return (
-    <div className="ui container center aligned ">
+    <Grid container centered>
       <Loader
         type="Oval"
         color="#21ba45"
@@ -12,7 +13,6 @@ export default function MusicTransferLoader({ visible }) {
         width={100}
         visible={visible}
       />
-      ;
-    </div>
+    </Grid>
   );
 }
