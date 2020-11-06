@@ -1,7 +1,6 @@
 import React from 'react';
-
 import AuthService from '../../../services/AuthService';
-import { Progress, Header, Container, Message } from 'semantic-ui-react';
+import { Progress, Header, Container, Message, Button } from 'semantic-ui-react';
 import ax from '../../../axios/axios';
 
 export default class TransferSongsPage extends React.Component {
@@ -13,7 +12,7 @@ export default class TransferSongsPage extends React.Component {
     super(props);
     this.state = {
       error: '',
-      transferComplete: false,
+      transferConfirmed: false,
       progress: 0,
       warningText: 'Please do not close or refresh this window',
       progressText: 'Transferring...',
@@ -25,26 +24,16 @@ export default class TransferSongsPage extends React.Component {
   }
 
   onUnload = (e) => {
-    e.preventDefault();
-    sessionStorage.clear();
     e.returnValue = '';
+    return null;
   };
 
-  async componentDidMount() {
-    window.addEventListener('beforeunload', this.onUnload);
-    let { selectedPlaylists } = this.state;
-
-    for (let index = 0; index < selectedPlaylists.length; index++) {
-      await this.transferSongs(selectedPlaylists[index]);
-      let prog = Math.round(((index + 1) / selectedPlaylists.length) * 100);
-      this.setState({ progress: prog });
-    }
-    this.setState({
-      progressText: 'All done! You may now close this window',
-      transferComplete: true,
-    });
+  componentWillUnmount() {
     window.removeEventListener('beforeunload', this.onUnload);
-    sessionStorage.clear();
+  }
+
+  componentDidMount() {
+    window.addEventListener('beforeunload', this.onUnload);
   }
 
   createDestAccPlaylist = async (playlist) => {
@@ -101,7 +90,7 @@ export default class TransferSongsPage extends React.Component {
     });
   };
 
-  transferSongs = async (srcAccPlaylist) => {
+  transferPlaylistSongs = async (srcAccPlaylist) => {
     const { destAcc } = this.state;
     const auth = {
       headers: { Authorization: `Bearer ${destAcc.access_token}` },
@@ -124,23 +113,71 @@ export default class TransferSongsPage extends React.Component {
       this.setState({ error });
     }
   };
-  render() {
-    const { error, warningText, transferComplete, progress, progressText } = this.state;
 
+  async transferSelectedSongs() {
+    let { selectedPlaylists } = this.state;
+    for (let index = 0; index < selectedPlaylists.length; index++) {
+      await this.transferPlaylistSongs(selectedPlaylists[index]);
+      let prog = Math.round(((index + 1) / selectedPlaylists.length) * 100);
+      this.setState({ progress: prog });
+    }
+    this.setState({
+      progressText: 'All done! You may now close this window',
+      transferComplete: true,
+    });
+    window.removeEventListener('beforeunload', this.onUnload);
+    sessionStorage.clear();
+  }
+
+  renderConfirmButton() {
+    const { transferConfirmed } = this.state;
+    if (!transferConfirmed) {
+      return (
+        <Button
+          color="green"
+          size="large"
+          onClick={async () => {
+            this.setState({ transferConfirmed: true });
+            await this.transferSelectedSongs();
+          }}
+        >
+          Confirm Transfer
+        </Button>
+      );
+    }
+    return <></>;
+  }
+  render() {
+    const {
+      error,
+      warningText,
+      transferComplete,
+      progress,
+      progressText,
+      transferConfirmed,
+    } = this.state;
     if (error) {
       return <div> Error</div>;
     }
     return (
       <Container>
-        <Message hidden={transferComplete} color="red">
+        <Message hidden={!transferConfirmed || transferComplete} color="red">
           <Message.Header>{warningText}</Message.Header>
         </Message>
 
-        <Header style={{ marginTop: '3em' }} as="h1">
+        <Header hidden={!transferConfirmed} style={{ marginTop: '3em' }} as="h1">
           {progressText}
         </Header>
 
-        <Progress indicating={!transferComplete} percent={progress} progress color="green" />
+        <Progress
+          disabled={!transferConfirmed}
+          indicating={!transferComplete}
+          percent={progress}
+          progress
+          color="green"
+          style={{ marginTop: '3em' }}
+        />
+        {this.renderConfirmButton()}
       </Container>
     );
   }
