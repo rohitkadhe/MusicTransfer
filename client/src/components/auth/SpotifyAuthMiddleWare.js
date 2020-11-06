@@ -17,7 +17,7 @@ export default function SpotifyAuthMiddleWare({ account_type, location }) {
       }
       if (account_type === 'destAcc' && userAccount) {
         setDestAcc(userAccount);
-        setSrcAcc(AuthService.getAccFromLocalStorage('srcAcc'));
+        setSrcAcc(AuthService.getAccFromsessionStorage('srcAcc'));
       }
       setIsLoading(false);
     };

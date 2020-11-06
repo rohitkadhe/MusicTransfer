@@ -1,18 +1,19 @@
 import React from 'react';
+
 import AuthService from '../../../services/AuthService';
 import { Progress, Header, Container, Message } from 'semantic-ui-react';
 import ax from '../../../axios/axios';
 
 export default class TransferSongsPage extends React.Component {
   constructor(props) {
-    const srcAcc = AuthService.getAccFromLocalStorage('srcAcc');
-    const destAcc = AuthService.getAccFromLocalStorage('destAcc');
-    const selectedPlaylists = Object.values(JSON.parse(localStorage.getItem('selectedPlaylists')));
+    const srcAcc = AuthService.getAccFromsessionStorage('srcAcc');
+    const destAcc = AuthService.getAccFromsessionStorage('destAcc');
+    const selectedPlaylists = JSON.parse(sessionStorage.getItem('selectedPlaylists'));
 
     super(props);
     this.state = {
       error: '',
-      isLoading: false,
+      transferComplete: false,
       progress: 0,
       warningText: 'Please do not close or refresh this window',
       progressText: 'Transferring...',
@@ -23,15 +24,27 @@ export default class TransferSongsPage extends React.Component {
     };
   }
 
+  onUnload = (e) => {
+    e.preventDefault();
+    sessionStorage.clear();
+    e.returnValue = '';
+  };
+
   async componentDidMount() {
-    const { selectedPlaylists } = this.state;
-    this.setState({ isLoading: true });
+    window.addEventListener('beforeunload', this.onUnload);
+    let { selectedPlaylists } = this.state;
+
     for (let index = 0; index < selectedPlaylists.length; index++) {
       await this.transferSongs(selectedPlaylists[index]);
-      let prog = ((index + 1) / selectedPlaylists.length) * 100;
+      let prog = Math.round(((index + 1) / selectedPlaylists.length) * 100);
       this.setState({ progress: prog });
     }
-    this.setState({ isLoading: false, progressText: 'All done! You may now close this window' });
+    this.setState({
+      progressText: 'All done! You may now close this window',
+      transferComplete: true,
+    });
+    window.removeEventListener('beforeunload', this.onUnload);
+    sessionStorage.clear();
   }
 
   createDestAccPlaylist = async (playlist) => {
@@ -59,6 +72,7 @@ export default class TransferSongsPage extends React.Component {
     };
     let offset = 0;
     let songsRemaining = 1;
+
     try {
       while (songsRemaining !== 0) {
         let resp = await ax.get(
@@ -94,37 +108,31 @@ export default class TransferSongsPage extends React.Component {
     };
     let songs = await this.fetchPlaylistSongs(srcAccPlaylist);
     let destPlaylist = await this.createDestAccPlaylist(srcAccPlaylist);
-
-    this.setState({
-      currentTransferDestPlaylist: ['destPlaylist'],
-      currentTransferSongs: ['songs'],
-    });
     let uriArray = this.getSongUriArray(songs);
     let from = 0;
     let to = Math.min(uriArray.length, 100);
-
-    while (from < uriArray.length) {
-      let body = {};
-      let uris = uriArray.slice(from, to);
-      console.log('Spliced array', uris);
-      body.uris = uris;
-      let resp = await ax.post(
-        `spotify/${destAcc.id}/playlists/${destPlaylist.id}/songs`,
-        body,
-        auth,
-      );
-      from = to;
-      to = Math.min(to + 100, uriArray.length);
+    try {
+      while (from < uriArray.length) {
+        let body = {};
+        let uris = uriArray.slice(from, to);
+        body.uris = uris;
+        await ax.post(`spotify/${destAcc.id}/playlists/${destPlaylist.id}/songs`, body, auth);
+        from = to;
+        to = Math.min(to + 100, uriArray.length);
+      }
+    } catch (error) {
+      this.setState({ error });
     }
   };
   render() {
-    const { isLoading, error, progress, progressText, warningText } = this.state;
+    const { error, warningText, transferComplete, progress, progressText } = this.state;
+
     if (error) {
       return <div> Error</div>;
     }
     return (
       <Container>
-        <Message hidden={!isLoading} color="red">
+        <Message hidden={transferComplete} color="red">
           <Message.Header>{warningText}</Message.Header>
         </Message>
 
@@ -132,7 +140,7 @@ export default class TransferSongsPage extends React.Component {
           {progressText}
         </Header>
 
-        <Progress indicating={isLoading} percent={progress} progress color="green" />
+        <Progress indicating={!transferComplete} percent={progress} progress color="green" />
       </Container>
     );
   }

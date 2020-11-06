@@ -3,22 +3,21 @@ import MusicTransferLoader from '../../loader/MusicTransferLoader';
 import AuthService from '../../../services/AuthService';
 import { useAxiosGet } from '../../../hooks/useAxios';
 import SpotifyLogo from '../../../icons/spotify.png';
-import { Grid, List, Header, Segment, Button, Image, Checkbox } from 'semantic-ui-react';
+import { Grid, List, Header, Button, Image, Checkbox } from 'semantic-ui-react';
 
 export default function SelectPlaylistsPage({ history, location }) {
-  const srcAcc = AuthService.getAccFromLocalStorage('srcAcc');
-  const [playlists, setPlaylists] = useState({});
+  const srcAcc = AuthService.getAccFromsessionStorage('srcAcc');
+  const [playlists, setPlaylists] = useState([]);
   const auth = {
     headers: { Authorization: `Bearer ${srcAcc.access_token}` },
   };
 
-  function handleCheckboxClick(e, index, data, playlist) {
+  function handleCheckboxClick(data, playlist) {
     if (data.checked) {
-      playlists[index] = playlist;
-      setPlaylists({ ...playlists });
+      setPlaylists([...playlists, playlist]);
     } else {
-      delete playlists[index];
-      setPlaylists({ ...playlists });
+      let filtered = playlists.slice(0).filter((p) => p.id !== playlist.id);
+      setPlaylists(filtered);
     }
   }
 
@@ -40,7 +39,7 @@ export default function SelectPlaylistsPage({ history, location }) {
             <Checkbox
               className="color-green"
               toggle
-              onChange={(e, data) => handleCheckboxClick(e, index, data, playlist)}
+              onChange={(e, data) => handleCheckboxClick(data, playlist)}
             />
           </List.Content>
           <Image size="tiny" circular src={imageUrl} floated="left" />
@@ -51,7 +50,7 @@ export default function SelectPlaylistsPage({ history, location }) {
       );
     });
     return (
-      <Grid container verticalAlign="middle" textAlign="center">
+      <Grid container verticalAlign="middle" centered>
         <Grid.Row>
           <Header as="h1">Select Playlists To Transfer</Header>
         </Grid.Row>
@@ -64,9 +63,9 @@ export default function SelectPlaylistsPage({ history, location }) {
           <Button
             color="green"
             size="huge"
-            disabled={Object.values(playlists).length === 0}
+            disabled={playlists.length === 0}
             onClick={() => {
-              localStorage.setItem('selectedPlaylists', JSON.stringify(playlists));
+              sessionStorage.setItem('selectedPlaylists', JSON.stringify(playlists));
               history.push({
                 pathname: '/selectDestination',
                 state: { prevPath: location.pathname },

@@ -19,8 +19,8 @@ class AuthService {
     }
   }
 
-  getAccFromLocalStorage(account_type) {
-    return JSON.parse(localStorage.getItem(account_type));
+  getAccFromsessionStorage(account_type) {
+    return JSON.parse(sessionStorage.getItem(account_type));
   }
 
   async getUserAccount(access_token) {
@@ -38,15 +38,15 @@ class AuthService {
   }
 
   saveAccount(type, account) {
-    localStorage.setItem(type, JSON.stringify(account));
+    sessionStorage.setItem(type, JSON.stringify(account));
   }
 
-  clearLocalStorage() {
-    localStorage.clear();
+  clearsessionStorage() {
+    sessionStorage.clear();
   }
 
   isAuthenticated(account_type) {
-    let acc = JSON.parse(localStorage.getItem(account_type));
+    let acc = JSON.parse(sessionStorage.getItem(account_type));
     if (acc === null || acc === '') return false;
     if (acc.access_token === '') return false;
     return true;
