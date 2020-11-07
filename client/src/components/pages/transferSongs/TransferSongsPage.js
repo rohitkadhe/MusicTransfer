@@ -1,7 +1,13 @@
 import React from 'react';
 import SpotifyService from '../../../services/SpotifyService';
 import { Progress, Header, Container, Message, Button } from 'semantic-ui-react';
-
+import {
+  sourceAccount,
+  destinationAccount,
+  transferring,
+  allDone,
+  warningText,
+} from '../../../constants/strings';
 export default class TransferSongsPage extends React.Component {
   constructor(props) {
     const selectedPlaylists = JSON.parse(sessionStorage.getItem('selectedPlaylists'));
@@ -11,8 +17,8 @@ export default class TransferSongsPage extends React.Component {
       error: '',
       transferConfirmed: false,
       progress: 0,
-      warningText: 'Please do not close or refresh this window',
-      progressText: 'Transferring...',
+      warningText: warningText,
+      progressText: transferring,
       selectedPlaylists: selectedPlaylists,
       totalPlaylists: selectedPlaylists.length,
     };
@@ -34,12 +40,16 @@ export default class TransferSongsPage extends React.Component {
   async transferSelectedSongs() {
     let { selectedPlaylists } = this.state;
     for (let index = 0; index < selectedPlaylists.length; index++) {
-      await SpotifyService.transferPlaylistSongs('srcAcc', 'destAcc', selectedPlaylists[index]);
+      await SpotifyService.transferPlaylistSongs(
+        sourceAccount,
+        destinationAccount,
+        selectedPlaylists[index],
+      );
       let prog = Math.round(((index + 1) / selectedPlaylists.length) * 100);
       this.setState({ progress: prog });
     }
     this.setState({
-      progressText: 'All done! You may now close this window',
+      progressText: allDone,
       transferComplete: true,
     });
     window.removeEventListener('beforeunload', this.onUnload);

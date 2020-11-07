@@ -1,16 +1,23 @@
 import ax from '../axios/axios';
+import {
+  sourceAccount,
+  destinationAccount,
+  userPlaylistRoute,
+  playlistSongsRoute,
+  addSongsToPlaylistRoute,
+} from '../constants/strings';
 
 class SpotifyService {
   constructor() {
-    this.srcAcc = JSON.parse(sessionStorage.getItem('srcAcc'));
-    this.destAcc = JSON.parse(sessionStorage.getItem('destAcc'));
+    this.srcAcc = JSON.parse(sessionStorage.getItem(sourceAccount));
+    this.destAcc = JSON.parse(sessionStorage.getItem(destinationAccount));
   }
   getAccount(accType) {
     if (this.srcAcc === null || this.destAcc === null) {
-      this.srcAcc = JSON.parse(sessionStorage.getItem('srcAcc'));
-      this.destAcc = JSON.parse(sessionStorage.getItem('destAcc'));
+      this.srcAcc = JSON.parse(sessionStorage.getItem(sourceAccount));
+      this.destAcc = JSON.parse(sessionStorage.getItem(destinationAccount));
     }
-    let acc = accType === 'srcAcc' ? this.srcAcc : this.destAcc;
+    let acc = accType === sourceAccount ? this.srcAcc : this.destAcc;
     return acc;
   }
   getAuth(accType) {
@@ -21,21 +28,21 @@ class SpotifyService {
   }
   async getPlaylists(accType) {
     let acc = this.getAccount(accType);
-    let url = `/spotify/${acc.id}/playlists`;
+    let url = userPlaylistRoute(acc.id);
     const resp = await ax.get(url, this.getAuth(accType));
     return resp.data;
   }
 
   async getPlaylistSongs(accType, playlist, offset = 0) {
     let acc = this.getAccount(accType);
-    let url = `spotify/${acc.id}/playlists/${playlist.id}/songs?offset=${offset}`;
+    let url = playlistSongsRoute(acc.id, playlist.id, offset);
     let resp = await ax.get(url, this.getAuth(accType));
     return resp.data.songs;
   }
 
   async createPlaylist(accType, name) {
     let acc = this.getAccount(accType);
-    let url = `spotify/${acc.id}/playlists`;
+    let url = userPlaylistRoute(acc.id);
     let resp = await ax.post(url, { name: name }, this.getAuth(accType));
     return resp.data;
   }
@@ -66,7 +73,7 @@ class SpotifyService {
         let body = {};
         let uris = uriArray.slice(from, to);
         body.uris = uris;
-        await ax.post(`spotify/${destAcc.id}/playlists/${destPlaylist.id}/songs`, body, auth);
+        await ax.post(addSongsToPlaylistRoute(destAcc.id, destPlaylist.id), body, auth);
         from = to;
         to = Math.min(to + 100, uriArray.length);
       }

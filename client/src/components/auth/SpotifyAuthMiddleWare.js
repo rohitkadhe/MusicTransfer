@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import AuthService from '../../services/AuthService';
 import MusicTransferLoader from '../loader/MusicTransferLoader';
+import { transferSongsRoute, sourceAccount, destinationAccount } from '../../constants/strings';
 
-export default function SpotifyAuthMiddleWare({ accType }) {
+export default function SpotifyAuthMiddleWare({ match }) {
   const [userAccount, setUserAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  let { accType } = match.params;
   useEffect(() => {
     const authenticateAccount = async (accType) => {
       setIsLoading(true);
@@ -17,16 +18,17 @@ export default function SpotifyAuthMiddleWare({ accType }) {
   }, [accType]);
 
   if (isLoading) {
+    console.log(accType);
     return <MusicTransferLoader visible={isLoading} />;
-  } else if (accType === 'srcAcc' && userAccount) {
+  } else if (accType === sourceAccount && userAccount) {
     window.opener.spotifyCallback(
       `/${accType}/spotify/${userAccount.id}/playlists`,
       accType,
       userAccount,
     );
     return <MusicTransferLoader visible={isLoading} />;
-  } else if (accType === 'destAcc' && userAccount) {
-    window.opener.spotifyCallback(`/${accType}/spotify/transfer`, accType, userAccount);
+  } else if (accType === destinationAccount && userAccount) {
+    window.opener.spotifyCallback(transferSongsRoute, accType, userAccount);
     return <MusicTransferLoader visible={isLoading} />;
   } else {
     return <MusicTransferLoader visible={isLoading} />;

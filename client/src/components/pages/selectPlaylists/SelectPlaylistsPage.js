@@ -4,8 +4,9 @@ import AuthService from '../../../services/AuthService';
 import { useAxiosGet } from '../../../hooks/useAxios';
 import SpotifyLogo from '../../../icons/spotify.png';
 import { Grid, List, Header, Button, Image, Checkbox } from 'semantic-ui-react';
+import { userPlaylistRoute, selectDestinationRoute } from '../../../constants/strings';
 
-export default function SelectPlaylistsPage({ history, location }) {
+export default function SelectPlaylistsPage({ history, location, title }) {
   const srcAcc = AuthService.getAccFromSessionStorage('srcAcc');
   const [playlists, setPlaylists] = useState([]);
   const auth = {
@@ -22,7 +23,7 @@ export default function SelectPlaylistsPage({ history, location }) {
   }
 
   const [response, error, isLoading] = useAxiosGet({
-    url: `/spotify/${srcAcc.id}/playlists`,
+    url: userPlaylistRoute(srcAcc.id),
     config: auth,
   });
   if (isLoading) {
@@ -52,7 +53,7 @@ export default function SelectPlaylistsPage({ history, location }) {
     return (
       <Grid container verticalAlign="middle" centered>
         <Grid.Row>
-          <Header as="h1">Select Playlists To Transfer</Header>
+          <Header as="h1">{title}</Header>
         </Grid.Row>
         <Grid.Row>
           <List relaxed="very" divided verticalAlign="middle" style={{ padding: '1rem' }}>
@@ -67,7 +68,7 @@ export default function SelectPlaylistsPage({ history, location }) {
             onClick={() => {
               sessionStorage.setItem('selectedPlaylists', JSON.stringify(playlists));
               history.push({
-                pathname: '/selectDestination',
+                pathname: selectDestinationRoute,
                 state: { prevPath: location.pathname },
               });
             }}

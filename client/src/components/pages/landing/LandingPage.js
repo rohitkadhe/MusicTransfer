@@ -1,6 +1,7 @@
 import React from 'react';
 import './landingPage.css';
 import { Button, Container, Header } from 'semantic-ui-react';
+import { selectSourceRoute } from '../../../constants/strings';
 
 export default function LandingPage({ history, location }) {
   return (
@@ -14,7 +15,7 @@ export default function LandingPage({ history, location }) {
         size="huge"
         onClick={() =>
           history.push({
-            pathname: '/selectSource',
+            pathname: `${selectSourceRoute}`,
             state: { prevPath: location.pathname },
           })
         }
