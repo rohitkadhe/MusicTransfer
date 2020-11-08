@@ -5,22 +5,22 @@
 # Website Flow
   
   ### Landing Page
-  <img src="screenshots/landingPage.JPG"> <br />
+  <img src="screenshots/landingPage.JPG" style="margin-bottom:10px margin-top: 10px" >
   
   ### Select Source Account Page
-  <img src="screenshots/selectSourcePage.JPG"> <br />
+  <img src="screenshots/selectSourcePage.JPG" style="margin-bottom:10px margin-top: 10px"> 
   
   ### Select Playlists Page
-  <img src="screenshots/selectPlaylistsPage.JPG"> <br />
-  <img src="screenshots/selectPlaylistsPage2.JPG"> <br />
+  <img src="screenshots/selectPlaylistsPage.JPG" style="margin-bottom:10px margin-top: 10px"> 
+  <img src="screenshots/selectPlaylistsPage2.JPG" style="margin-bottom:10px margin-top: 10px">
   
   ### Select Destination Account Page
-  <img src="screenshots/selectDestinationPage.JPG"> <br />
+  <img src="screenshots/selectDestinationPage.JPG" style="margin-bottom:10px margin-top: 10px">
   
   ### Transfer Page 
-  <img src="screenshots/transferPageProgress.JPG"> <br />
-  <img src="screenshots/transferPageReloadWarning.JPG"> <br />
-  <img src="screenshots/transferPageComplete.JPG"> <br />
+  <img src="screenshots/transferPageProgress.JPG" style="margin-bottom:10px margin-top: 10px">
+  <img src="screenshots/transferPageReloadWarning.JPG" style="margin-bottom:10px margin-top: 10px"> 
+  <img src="screenshots/transferPageComplete.JPG" style="margin-bottom:10px margin-top: 10px">
 
 # Running the project locally
 ## Prerequisites
