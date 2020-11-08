@@ -28,12 +28,17 @@ app.use((err, req, res, next) => {
     error = { status: err.statusCode, message: err.message };
   }
   if (err.response && err.response.data) {
-    error = err.response.data.error;
+    error = { status: err.response.status, message: err.response.data.error };
   }
   if (error.status === undefined) {
+    console.log();
     error.status = 500;
     error.message = 'Internal server error';
   }
+  console.log('-----------------');
+  console.log(error);
+  console.log('-----------------');
+
   res.status(error.status).json(error);
 });
 app.listen(process.env.PORT, () => console.log(`Started listening on ${process.env.PORT || 3030}`));
