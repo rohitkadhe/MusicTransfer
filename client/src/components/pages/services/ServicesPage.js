@@ -2,7 +2,7 @@ import React from 'react';
 import './servicesPage.css';
 import SpotifyLogo from '../../../icons/spotify.png';
 import { Grid, Card, Header, Image } from 'semantic-ui-react';
-import AuthService from '../../../services/AuthService';
+import SessionStorageService from '../../../services/SessionStorageService';
 import { authRoute, authPopupTitle } from '../../../constants/strings';
 export default function ServicesPage({ title, accType, history, location }) {
   function openCenteredPopup(url, title, w, h) {
@@ -15,7 +15,7 @@ export default function ServicesPage({ title, accType, history, location }) {
     let popup = openCenteredPopup(authRoute(accType), authPopupTitle, 500, 800);
     const spotifyCallback = (url, accType, userAccount) => {
       popup.close();
-      AuthService.saveAccount(accType, userAccount);
+      SessionStorageService.save(accType, userAccount);
       history.push(url);
     };
     window.spotifyCallback = spotifyCallback;

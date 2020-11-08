@@ -7,15 +7,17 @@ import {
   addSongsToPlaylistRoute,
 } from '../constants/strings';
 
+import SessionStorageService from './SessionStorageService';
+
 class SpotifyService {
   constructor() {
-    this.srcAcc = JSON.parse(sessionStorage.getItem(sourceAccount));
-    this.destAcc = JSON.parse(sessionStorage.getItem(destinationAccount));
+    this.srcAcc = SessionStorageService.get(sourceAccount);
+    this.destAcc = SessionStorageService.get(destinationAccount);
   }
   getAccount(accType) {
     if (this.srcAcc === null || this.destAcc === null) {
-      this.srcAcc = JSON.parse(sessionStorage.getItem(sourceAccount));
-      this.destAcc = JSON.parse(sessionStorage.getItem(destinationAccount));
+      this.srcAcc = SessionStorageService.get(sourceAccount);
+      this.destAcc = SessionStorageService.get(destinationAccount);
     }
     let acc = accType === sourceAccount ? this.srcAcc : this.destAcc;
     return acc;

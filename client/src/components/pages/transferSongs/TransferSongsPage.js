@@ -7,10 +7,13 @@ import {
   transferring,
   allDone,
   warningText,
+  selectedPlaylistsKey,
 } from '../../../constants/strings';
+import SessionStorageService from '../../../services/SessionStorageService';
+
 export default class TransferSongsPage extends React.Component {
   constructor(props) {
-    const selectedPlaylists = JSON.parse(sessionStorage.getItem('selectedPlaylists'));
+    let selectedPlaylists = SessionStorageService.get(selectedPlaylistsKey);
 
     super(props);
     this.state = {
@@ -51,9 +54,10 @@ export default class TransferSongsPage extends React.Component {
     this.setState({
       progressText: allDone,
       transferComplete: true,
+      progress: 100,
     });
     window.removeEventListener('beforeunload', this.onUnload);
-    sessionStorage.clear();
+    SessionStorageService.clear();
   }
 
   renderConfirmButton() {

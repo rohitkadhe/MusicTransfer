@@ -1,4 +1,5 @@
 import ax from '../axios/axios';
+import SessionStorageService from './SessionStorageService';
 
 class AuthService {
   getAccessToken() {
@@ -14,13 +15,13 @@ class AuthService {
     if (access_token) {
       const userAccount = await this.getUserAccount(access_token);
 
-      this.saveAccount(accType, userAccount);
+      SessionStorageService.save(accType, userAccount);
       return userAccount;
     }
   }
 
-  getAccFromSessionStorage(accType) {
-    return JSON.parse(sessionStorage.getItem(accType));
+  getAccount(accType) {
+    return SessionStorageService.get(accType);
   }
 
   async getUserAccount(access_token) {
@@ -37,12 +38,8 @@ class AuthService {
     }
   }
 
-  saveAccount(type, account) {
-    sessionStorage.setItem(type, JSON.stringify(account));
-  }
-
   isAuthenticated(accType) {
-    let acc = JSON.parse(sessionStorage.getItem(accType));
+    let acc = SessionStorageService.get(accType);
     if (acc === null || acc === '') return false;
     if (acc.access_token === '') return false;
     return true;

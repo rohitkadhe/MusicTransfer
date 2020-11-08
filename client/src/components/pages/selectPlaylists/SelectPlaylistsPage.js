@@ -4,10 +4,17 @@ import AuthService from '../../../services/AuthService';
 import { useAxiosGet } from '../../../hooks/useAxios';
 import SpotifyLogo from '../../../icons/spotify.png';
 import { Grid, List, Header, Button, Image, Checkbox } from 'semantic-ui-react';
-import { userPlaylistRoute, selectDestinationRoute } from '../../../constants/strings';
+import {
+  userPlaylistRoute,
+  selectDestinationRoute,
+  sourceAccount,
+  selectedPlaylistsKey,
+} from '../../../constants/strings';
+
+import SessionStorageService from '../../../services/SessionStorageService';
 
 export default function SelectPlaylistsPage({ history, location, title }) {
-  const srcAcc = AuthService.getAccFromSessionStorage('srcAcc');
+  const srcAcc = AuthService.getAccount(sourceAccount);
   const [playlists, setPlaylists] = useState([]);
   const auth = {
     headers: { Authorization: `Bearer ${srcAcc.access_token}` },
@@ -66,7 +73,7 @@ export default function SelectPlaylistsPage({ history, location, title }) {
             size="huge"
             disabled={playlists.length === 0}
             onClick={() => {
-              sessionStorage.setItem('selectedPlaylists', JSON.stringify(playlists));
+              SessionStorageService.save(selectedPlaylistsKey, playlists);
               history.push({
                 pathname: selectDestinationRoute,
                 state: { prevPath: location.pathname },

@@ -7,7 +7,7 @@ import ServicesPage from '../components/pages/services/ServicesPage';
 import SelectPlaylistsPage from '../components/pages/selectPlaylists/SelectPlaylistsPage';
 import TransferSongsPage from '../components/pages/transferSongs/TransferSongsPage';
 import {
-  homePageRoute,
+  homeRoute,
   selectSourceRoute,
   selectDestinationRoute,
   spotifyAuthRedirectRoute,
@@ -19,11 +19,12 @@ import {
   selectSourceAccount,
   selectPlaylists,
 } from '../constants/strings';
+import AuthService from '../services/AuthService';
 
 export default function Routes() {
   return (
     <Switch>
-      <Route exact path={homePageRoute} component={(props) => <LandingPage {...props} />} />
+      <Route exact path={homeRoute} component={(props) => <LandingPage {...props} />} />
 
       <Route
         exact
@@ -38,24 +39,26 @@ export default function Routes() {
         component={(props) => <SpotifyAuthMiddleWare {...props} />}
       />
 
-      <Route
+      <ProtectedRoute
         exact
         path={selectDestinationRoute}
         component={(props) => (
           <ServicesPage {...props} accType={destinationAccount} title={selectDestinationAccount} />
         )}
+        allowRender={AuthService.isAuthenticated(sourceAccount)}
       />
-      <Route
+      <ProtectedRoute
         exact
         path={selectPlaylistsRoute}
         component={(props) => <SelectPlaylistsPage {...props} title={selectPlaylists} />}
+        allowRender={AuthService.isAuthenticated(sourceAccount)}
       />
       <ProtectedRoute
         exact
         path={transferSongsRoute}
         component={(props) => <TransferSongsPage {...props} />}
       />
-      <Route path="*" component={() => <Redirect to={homePageRoute} />} />
+      <Route path="*" component={() => <Redirect to={homeRoute} />} />
     </Switch>
   );
 }

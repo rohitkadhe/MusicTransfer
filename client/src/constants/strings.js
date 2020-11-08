@@ -19,7 +19,7 @@ const allDone = 'All done! You may now close this window';
 const warningText = 'Please do not close or refresh this window';
 
 //Routes Front End
-const homePageRoute = '/';
+const homeRoute = '/';
 const transferSongsRoute = `/destAcc/spotify/transfer`;
 const selectSourceRoute = '/selectSource';
 const selectDestinationRoute = '/selectDestination';
@@ -40,7 +40,7 @@ export {
   sourceAccount,
   destinationAccount,
   selectedPlaylistsKey,
-  homePageRoute,
+  homeRoute,
   transferSongsRoute,
   selectSourceRoute,
   selectDestinationRoute,
