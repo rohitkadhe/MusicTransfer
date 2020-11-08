@@ -4,7 +4,7 @@
 
 # Website Flow
 
-![landing page](https://raw.github.com/rohitkadhe/MusicTransfer/master/screenshots/landingPage.jpg)
+![landing page](https://github.com/rohitkadhe/MusicTransfer/master/screenshots/landingPage.jpg)
 
 ## Prerequisites
 
