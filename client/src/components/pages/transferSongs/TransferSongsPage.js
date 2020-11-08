@@ -36,10 +36,6 @@ export default class TransferSongsPage extends React.Component {
     window.removeEventListener('beforeunload', this.onUnload);
   }
 
-  componentDidMount() {
-    window.addEventListener('beforeunload', this.onUnload);
-  }
-
   async transferSelectedSongs() {
     let { selectedPlaylists } = this.state;
     for (let index = 0; index < selectedPlaylists.length; index++) {
@@ -69,6 +65,7 @@ export default class TransferSongsPage extends React.Component {
           size="large"
           onClick={async () => {
             this.setState({ transferConfirmed: true });
+            window.addEventListener('beforeunload', this.onUnload);
             await this.transferSelectedSongs();
           }}
         >
