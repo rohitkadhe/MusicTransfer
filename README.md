@@ -4,7 +4,7 @@
 
 # Website Flow
 
-<img src="./client/screenshots/landingPage.jpg" width="400px"/>
+<img src="screenshots/landingPage.jpg" width="400px"/>
 
 ## Prerequisites
 
