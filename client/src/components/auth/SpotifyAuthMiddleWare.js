@@ -26,7 +26,11 @@ export default function SpotifyAuthMiddleWare({ match }) {
       userAccount,
     );
     return <MusicTransferLoader visible={isLoading} />;
-  } else if (accType === destinationAccount && AuthService.isAuthenticated(sourceAccount)) {
+  } else if (
+    accType === destinationAccount &&
+    AuthService.isAuthenticated(sourceAccount) &&
+    userAccount
+  ) {
     window.opener.spotifyCallback(transferSongsRoute, accType, userAccount);
     return <MusicTransferLoader visible={isLoading} />;
   } else {

@@ -60,7 +60,6 @@ class SpotifyService {
 
   async transferPlaylistSongs(fromAccType, toAccType, srcAccPlaylist) {
     let destAcc = this.getAccount(toAccType);
-    console.log(destAcc);
     const auth = {
       headers: { Authorization: `Bearer ${destAcc.access_token}` },
     };
