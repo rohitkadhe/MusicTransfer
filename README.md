@@ -1,11 +1,29 @@
 # Music Transfer
 
-- Objective of this project is to allow users to transfer/share songs between spotify accounts easily
+- Objective of this project is to allow users to transfer/share songs between Spotify Accounts easily
 
 # Website Flow
+  
+  ### Landing Page
   <img src="screenshots/landingPage.JPG">
   
-![landing page](https://github.com/rohitkadhe/MusicTransfer/master/screenshots/landingPage.jpg)
+  ### Select Source Account Page
+  <img src="screenshots/selectSourcePage.JPG">
+  
+  ### Select Playlists Page
+  <img src="screenshots/selectPlaylistsPage.JPG">
+  
+  <img src="screenshots/selectPlaylistsPage2.JPG">
+  
+  ### Select Destination Account Page
+  <img src="screenshots/selectDestinationPage.JPG">
+  
+  ### Transfer Page 
+  <img src="screenshots/transferPageProgress.JPG">
+  
+  <img src="screenshots/transferPageReloadWarning.JPG">
+  
+  <img src="screenshots/transferPageComplete.JPG">
 
 ## Prerequisites
 
