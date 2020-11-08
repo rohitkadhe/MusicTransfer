@@ -1,6 +1,16 @@
 # Music Transfer
 
-- Objective of this project is to allow users to transfer songs between spotify accounts easily
+- Objective of this project is to allow users to transfer/share songs between spotify accounts easily
+
+# Website Flow
+
+<img src="/client/screenshots/landingPage.jpg" width="400px"/>
+
+## Prerequisites
+
+- In the server directory configure the .env.example file with your client_id and client_secret
+- Make sure you don't have quotes around your client_id and client_secret
+- Rename the .env.example file to .env
 
 ## Running the server locally
 
@@ -11,5 +21,5 @@
 ## Running the client locally
 
 - Open a terminal of choice
-- Change directories into the project directory then into the 'music_transfer_client' directory
+- Change directories into the project directory then into the 'client' directory
 - Type 'npm start'
