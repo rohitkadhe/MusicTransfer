@@ -6,7 +6,8 @@ export function useAxiosGet({ url, config = null }) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   if (config != null) {
-    config = JSON.stringify(config); // This is done so useEffect doesnt keep gettting called (string stays same on rerender object wont)
+    // This is done so useEffect doesnt keep gettting called (string stays same on rerender object wont)
+    config = JSON.stringify(config);
   }
 
   useEffect(() => {
