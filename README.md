@@ -25,6 +25,7 @@
   <br></br>
   <img src="screenshots/transferPageComplete.JPG">
 
+# Running the project locally
 ## Prerequisites
 
 - In the server directory configure the .env.example file with your client_id and client_secret
