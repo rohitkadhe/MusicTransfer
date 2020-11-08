@@ -12,7 +12,7 @@
   
   ### Select Playlists Page
   <img src="screenshots/selectPlaylistsPage.JPG">
-  
+  <br></br>
   <img src="screenshots/selectPlaylistsPage2.JPG">
   
   ### Select Destination Account Page
@@ -20,9 +20,9 @@
   
   ### Transfer Page 
   <img src="screenshots/transferPageProgress.JPG">
-  
+  <br></br>
   <img src="screenshots/transferPageReloadWarning.JPG">
-  
+  <br></br>
   <img src="screenshots/transferPageComplete.JPG">
 
 ## Prerequisites
