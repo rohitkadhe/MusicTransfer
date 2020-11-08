@@ -4,7 +4,7 @@
 
 # Website Flow
 
-<img src="screenshots/landingPage.jpg" width="400px"/>
+![landing page](https://raw.github.com/rohitkadhe/MusicTransfer/master/screenshots/landingPage.jpg)
 
 ## Prerequisites
 
