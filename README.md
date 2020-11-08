@@ -3,7 +3,8 @@
 - Objective of this project is to allow users to transfer/share songs between spotify accounts easily
 
 # Website Flow
-
+  <img src="screenshots/landingPage.JPG" width=400>
+  
 ![landing page](https://github.com/rohitkadhe/MusicTransfer/master/screenshots/landingPage.jpg)
 
 ## Prerequisites
