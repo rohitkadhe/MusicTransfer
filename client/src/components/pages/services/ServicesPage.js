@@ -46,8 +46,8 @@ export default function ServicesPage({ title, accType, history }) {
           <Message hidden={dismissed} onDismiss={handleDismiss} color="green">
             <Message.Header>Important Note</Message.Header>
             <p>
-              If you are using <b>Facebook, Google</b> or <b>Apple</b>, to sign in to Spotify for
-              the <b>Source Account</b> log out before selecting the <b>Destination Account</b>
+              If you are using <b>Facebook, Google</b> or <b>Apple</b> to sign in to Spotify for the{' '}
+              <b>Source Account,</b> log out before selecting the <b>Destination Account</b>
             </p>
           </Message>
         </Grid.Row>
