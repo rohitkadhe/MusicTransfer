@@ -11,18 +11,24 @@ export function useAxiosGet({ url, config = null }) {
   }
 
   useEffect(() => {
+    let mounted = true;
     const fetchData = async () => {
       try {
         let resp = await ax.get(url, JSON.parse(config));
-        setResponse(resp.data);
-        setIsLoading(false);
+        if (mounted) {
+          setResponse(resp.data);
+          setIsLoading(false);
+        }
       } catch (err) {
-        setError(err);
-        setIsLoading(false);
+        if (mounted) {
+          setError(err);
+          setIsLoading(false);
+        }
       }
     };
 
     fetchData();
+    return () => (mounted = false);
   }, [url, config]);
 
   return [response, error, isLoading];

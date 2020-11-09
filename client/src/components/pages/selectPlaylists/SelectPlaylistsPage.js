@@ -33,6 +33,7 @@ export default function SelectPlaylistsPage({ history, location, title }) {
     url: userPlaylistRoute(srcAcc.id),
     config: auth,
   });
+
   if (isLoading) {
     return <MusicTransferLoader />;
   }

@@ -16,23 +16,24 @@ export default function SpotifyAuthMiddleWare({ match }) {
     };
     authenticateAccount(accType);
   }, [accType]);
-
   if (isLoading) {
     return <MusicTransferLoader visible={isLoading} />;
-  } else if (accType === sourceAccount && userAccount) {
+  }
+  if (userAccount === '') {
+    window.opener.spotifyCallback('', accType, userAccount);
+  }
+  if (accType === sourceAccount && userAccount) {
     window.opener.spotifyCallback(
       `/${accType}/spotify/${userAccount.id}/playlists`,
       accType,
       userAccount,
     );
-    return <MusicTransferLoader visible={isLoading} />;
   } else if (
     accType === destinationAccount &&
     AuthService.isAuthenticated(sourceAccount) &&
     userAccount
   ) {
     window.opener.spotifyCallback(transferSongsRoute, accType, userAccount);
-    return <MusicTransferLoader visible={isLoading} />;
   } else {
     return <MusicTransferLoader visible={isLoading} />;
   }

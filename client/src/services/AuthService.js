@@ -4,7 +4,6 @@ import SessionStorageService from './SessionStorageService';
 class AuthService {
   getAccessToken() {
     const parsedHash = new URLSearchParams(window.location.hash.substr(1));
-
     let access_token = parsedHash.get('access_token');
 
     return access_token;
@@ -17,6 +16,8 @@ class AuthService {
 
       SessionStorageService.save(accType, userAccount);
       return userAccount;
+    } else {
+      return '';
     }
   }
 

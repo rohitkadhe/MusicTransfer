@@ -11,8 +11,8 @@ const authenticate = async (req, res, next) => {
 };
 
 const callback = async (req, res, next) => {
+  const accType = req.params.accType;
   try {
-    const accType = req.params.accType;
     const code = req.query.code || null;
     const response = await SpotifyService.getAccessToken(code, accType);
     const auth = {
@@ -23,7 +23,7 @@ const callback = async (req, res, next) => {
         new URLSearchParams(auth).toString(),
     );
   } catch (error) {
-    next(error);
+    res.redirect(`http://localhost:3000/spotify/${accType}/error=access_denied`);
   }
 };
 const getUser = async (req, res, next) => {

@@ -7,11 +7,14 @@ import { authRoute, authPopupTitle, sourceAccount } from '../../../constants/str
 
 export default function ServicesPage({ title, accType, history }) {
   const [dismissed, setDismissed] = useState(false);
-
   useEffect(() => {
+    let mounted = true;
     setTimeout(() => {
-      setDismissed(true);
+      if (mounted) {
+        setDismissed(true);
+      }
     }, 15000);
+    return () => (mounted = false);
   }, []);
 
   function openCenteredPopup(url, title, w, h) {
@@ -24,8 +27,10 @@ export default function ServicesPage({ title, accType, history }) {
     let popup = openCenteredPopup(authRoute(accType), authPopupTitle, 500, 800);
     const spotifyCallback = (url, accType, userAccount) => {
       popup.close();
-      SessionStorageService.save(accType, userAccount);
-      history.push(url);
+      if (userAccount) {
+        SessionStorageService.save(accType, userAccount);
+        history.push(url);
+      }
     };
     window.spotifyCallback = spotifyCallback;
   };
@@ -41,8 +46,8 @@ export default function ServicesPage({ title, accType, history }) {
           <Message hidden={dismissed} onDismiss={handleDismiss} color="green">
             <Message.Header>Important Note</Message.Header>
             <p>
-              If you are using <b>Facebook, Google</b> or <b>Apple</b>, to sign in to Spotify log
-              out before selecting the <b>Destination Account</b>
+              If you are using <b>Facebook, Google</b> or <b>Apple</b>, to sign in to Spotify for
+              the <b>Source Account</b> log out before selecting the <b>Destination Account</b>
             </p>
           </Message>
         </Grid.Row>
