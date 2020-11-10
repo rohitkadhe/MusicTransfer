@@ -40,7 +40,7 @@ class SpotifyService {
     let offset = 0;
     let songsRemaining = 1;
     let res = [];
-    while (songsRemaining !== 0) {
+    while (songsRemaining > 0) {
       let resp = await ax.get(
         playlistSongsRoute(acc.id, playlist.id, offset),
         this.getAuth(accType),
