@@ -6,6 +6,7 @@ import LandingPage from '../components/pages/landing/LandingPage';
 import ServicesPage from '../components/pages/services/ServicesPage';
 import SelectPlaylistsPage from '../components/pages/selectPlaylists/SelectPlaylistsPage';
 import TransferSongsPage from '../components/pages/transferSongs/TransferSongsPage';
+import ErrorPage from '../components/pages/error/ErrorPage';
 import {
   homeRoute,
   selectSourceRoute,
@@ -18,6 +19,7 @@ import {
   selectDestinationAccount,
   selectSourceAccount,
   selectPlaylists,
+  errorRoute,
 } from '../constants/strings';
 import AuthService from '../services/AuthService';
 
@@ -58,6 +60,7 @@ export default function Routes() {
         path={transferSongsRoute}
         component={(props) => <TransferSongsPage {...props} />}
       />
+      <Route path={errorRoute} component={(props) => <ErrorPage {...props} />} />
       <Route path="*" component={() => <Redirect to={homeRoute} />} />
     </Switch>
   );

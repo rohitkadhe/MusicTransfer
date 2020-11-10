@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
-import { sourceAccount, destinationAccount, homeRoute } from '../../constants/strings';
+import { sourceAccount, destinationAccount, errorRoute } from '../../constants/strings';
 
 export const ProtectedRoute = ({ component: Component, allowRender, ...rest }) => {
   return (
@@ -15,7 +15,18 @@ export const ProtectedRoute = ({ component: Component, allowRender, ...rest }) =
         ) {
           return <Component {...props} />;
         } else {
-          return <Redirect to={{ pathname: homeRoute, state: { from: props.location } }} />;
+          return (
+            <Redirect
+              to={{
+                pathname: errorRoute,
+                state: {
+                  from: props.location.pathname,
+                  status: `${401} Unauthorized`,
+                  message: 'Authentication Error',
+                },
+              }}
+            />
+          );
         }
       }}
     />

@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import './servicesPage.css';
 import SpotifyLogo from '../../../icons/spotify.png';
 import { Grid, Card, Header, Image, Message } from 'semantic-ui-react';
 import SessionStorageService from '../../../services/SessionStorageService';
-import { authRoute, authPopupTitle, sourceAccount } from '../../../constants/strings';
+import {
+  authRoute,
+  authPopupTitle,
+  sourceAccount,
+  destinationAccount,
+  errorRoute,
+} from '../../../constants/strings';
+import './servicesPage.css';
+import AuthService from '../../../services/AuthService';
 
-export default function ServicesPage({ title, accType, history }) {
+export default function ServicesPage({ title, accType, history, location }) {
   const [dismissed, setDismissed] = useState(false);
+  let popup;
+
   useEffect(() => {
     let mounted = true;
     setTimeout(() => {
@@ -24,16 +33,30 @@ export default function ServicesPage({ title, accType, history }) {
   }
 
   const authenticateOnClick = () => {
-    let popup = openCenteredPopup(authRoute(accType), authPopupTitle, 500, 800);
-    const spotifyCallback = (url, accType, userAccount) => {
-      popup.close();
-      if (userAccount) {
-        SessionStorageService.save(accType, userAccount);
-        history.push(url);
-      }
-    };
-    window.spotifyCallback = spotifyCallback;
+    if (accType === sourceAccount) {
+      popup = openCenteredPopup(authRoute(accType), authPopupTitle, 500, 800);
+    } else if (accType === destinationAccount && AuthService.isAuthenticated(sourceAccount)) {
+      popup = openCenteredPopup(authRoute(accType), authPopupTitle, 500, 800);
+    } else {
+      history.push({
+        pathname: errorRoute,
+        state: {
+          error: {
+            status: `${401} Unauthorized`,
+            message: 'Authentication Error',
+          },
+        },
+      });
+    }
   };
+  const spotifyCallback = (url, accType, userAccount) => {
+    if (userAccount) {
+      SessionStorageService.save(accType, userAccount);
+      history.push(url);
+    }
+    popup.close();
+  };
+  window.spotifyCallback = spotifyCallback;
 
   const handleDismiss = () => {
     setDismissed(true);

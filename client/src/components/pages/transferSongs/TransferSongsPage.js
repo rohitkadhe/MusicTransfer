@@ -8,13 +8,14 @@ import {
   allDone,
   warningText,
   selectedPlaylistsKey,
+  errorRoute,
 } from '../../../constants/strings';
 import SessionStorageService from '../../../services/SessionStorageService';
 
 export default class TransferSongsPage extends React.Component {
   constructor(props) {
     let selectedPlaylists = SessionStorageService.get(selectedPlaylistsKey);
-
+    let length = selectedPlaylists !== null ? selectedPlaylists.length : 0;
     super(props);
     this.state = {
       error: '',
@@ -22,8 +23,8 @@ export default class TransferSongsPage extends React.Component {
       progress: 0,
       warningText: warningText,
       progressText: transferring,
-      selectedPlaylists: selectedPlaylists,
-      totalPlaylists: selectedPlaylists.length,
+      selectedPlaylists: selectedPlaylists || [],
+      totalPlaylists: length,
     };
   }
 
@@ -39,13 +40,17 @@ export default class TransferSongsPage extends React.Component {
   async transferSelectedSongs() {
     let { selectedPlaylists } = this.state;
     for (let index = 0; index < selectedPlaylists.length; index++) {
-      await SpotifyService.transferPlaylistSongs(
-        sourceAccount,
-        destinationAccount,
-        selectedPlaylists[index],
-      );
-      let prog = Math.round(((index + 1) / selectedPlaylists.length) * 100);
-      this.setState({ progress: prog });
+      try {
+        await SpotifyService.transferPlaylistSongs(
+          sourceAccount,
+          destinationAccount,
+          selectedPlaylists[index],
+        );
+        let prog = Math.round(((index + 1) / selectedPlaylists.length) * 100);
+        this.setState({ progress: prog });
+      } catch (err) {
+        this.setState({ error: err.response });
+      }
     }
     this.setState({
       progressText: allDone,
@@ -84,9 +89,15 @@ export default class TransferSongsPage extends React.Component {
       progressText,
       transferConfirmed,
     } = this.state;
-
+    const { history } = this.props;
     if (error) {
-      return <div> Error</div>;
+      return history.push({
+        pathname: errorRoute,
+        state: {
+          status: error.data.status,
+          message: error.data.message,
+        },
+      });
     }
     return (
       <Container>

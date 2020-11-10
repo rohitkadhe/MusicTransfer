@@ -7,15 +7,23 @@ export default function SpotifyAuthMiddleWare({ match }) {
   const [userAccount, setUserAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   let { accType } = match.params;
+
   useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
     const authenticateAccount = async (accType) => {
-      setIsLoading(true);
       let userAccount = await AuthService.authenticateAccount(accType);
-      setUserAccount(userAccount);
-      setIsLoading(false);
+      if (isMounted) {
+        setUserAccount(userAccount);
+        setIsLoading(false);
+      }
     };
     authenticateAccount(accType);
+    return () => {
+      isMounted = false;
+    };
   }, [accType]);
+
   if (isLoading) {
     return <MusicTransferLoader visible={isLoading} />;
   }

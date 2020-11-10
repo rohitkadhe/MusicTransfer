@@ -35,11 +35,24 @@ class SpotifyService {
     return resp.data;
   }
 
-  async getPlaylistSongs(accType, playlist, offset = 0) {
+  async getPlaylistSongs(accType, playlist) {
     let acc = this.getAccount(accType);
-    let url = playlistSongsRoute(acc.id, playlist.id, offset);
-    let resp = await ax.get(url, this.getAuth(accType));
-    return resp.data.songs;
+    let offset = 0;
+    let songsRemaining = 1;
+    let res = [];
+    while (songsRemaining !== 0) {
+      let resp = await ax.get(
+        playlistSongsRoute(acc.id, playlist.id, offset),
+        this.getAuth(accType),
+      );
+      let fetchedSongs = resp.data.songs;
+      songsRemaining = fetchedSongs.length;
+      offset += 100;
+      if (songsRemaining > 0) {
+        res = [...res, ...fetchedSongs];
+      }
+    }
+    return res;
   }
 
   async createPlaylist(accType, name) {
@@ -63,13 +76,13 @@ class SpotifyService {
     const auth = {
       headers: { Authorization: `Bearer ${destAcc.access_token}` },
     };
-    let songs = await this.getPlaylistSongs(fromAccType, srcAccPlaylist);
-    let destPlaylist = await this.createPlaylist(toAccType, srcAccPlaylist.name);
-    let uriArray = this.getSongUriArray(songs);
-    let from = 0;
-    let to = Math.min(uriArray.length, 100);
-
     try {
+      let songs = await this.getPlaylistSongs(fromAccType, srcAccPlaylist);
+      let destPlaylist = await this.createPlaylist(toAccType, srcAccPlaylist.name);
+      let uriArray = this.getSongUriArray(songs);
+      let from = 0;
+      let to = Math.min(uriArray.length, 100);
+
       while (from < uriArray.length) {
         let body = {};
         let uris = uriArray.slice(from, to);
