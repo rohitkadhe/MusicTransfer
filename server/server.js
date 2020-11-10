@@ -23,17 +23,17 @@ app.all('*', (req, res, next) => {
 
 app.use((err, req, res, next) => {
   let error = '';
-
+  console.log(error);
   if (err.message && err.statusCode) {
     error = { status: err.statusCode, message: err.message };
   }
   if (err.response && err.response.data) {
-    error = { status: err.response.status, message: err.response.data.error };
+    error = err.response.data.error;
   }
-  if (error.status === undefined) {
-    console.log();
+  if (!error || !error.status || !error.message) {
+    error = {};
     error.status = 500;
-    error.message = 'Internal server error';
+    error.message = 'Internal Server Error';
   }
 
   res.status(error.status).json(error);
