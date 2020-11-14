@@ -3,6 +3,9 @@ const router = express();
 const spotifyController = require('../../controllers/spotifyController');
 const verifyToken = require('../../middlewares/auth');
 
+router.get('/', (req, res) => {
+  res.send('Server Started');
+});
 router.get('/spotify/authenticate/:accType', spotifyController.authenticate);
 router.get('/spotify/callback/:accType', spotifyController.callback);
 router.get('/spotify/:spotify_user_id/playlists', verifyToken, spotifyController.getUserPlaylists);

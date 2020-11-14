@@ -8,9 +8,6 @@
     "dev": "nodemon server.js"
   },
   "author": "Rohit Kadhe",
-  "engines": {
-    "node": "12.x"
-  },
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.2",

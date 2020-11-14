@@ -48,6 +48,7 @@ export default function ServicesPage({ title, accType, history, location }) {
         },
       });
     }
+    window.spotifyCallback = spotifyCallback;
   };
   const spotifyCallback = (url, accType, userAccount) => {
     if (userAccount) {
@@ -56,7 +57,6 @@ export default function ServicesPage({ title, accType, history, location }) {
     }
     popup.close();
   };
-  window.spotifyCallback = spotifyCallback;
 
   const handleDismiss = () => {
     setDismissed(true);
