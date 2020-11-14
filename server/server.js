@@ -38,4 +38,6 @@ app.use((err, req, res, next) => {
 
   res.status(error.status).json(error);
 });
-app.listen(process.env.PORT, () => console.log(`Started listening on ${process.env.PORT || 3030}`));
+app.listen(process.env.PORT || 5433, () =>
+  console.log(`Started listening on ${process.env.PORT || 3030}`),
+);
