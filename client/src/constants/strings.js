@@ -28,6 +28,7 @@ const selectDestinationRoute = '/selectDestination';
 const spotifyAuthRedirectRoute = '/spotify/:accType/:access_token';
 const selectPlaylistsRoute = '/srcAcc/spotify/:spotify_user_id/playlists';
 const errorRoute = '/error';
+
 //Routes Back End
 const authRoute = (accType) => `${BASE_URL}/spotify/authenticate/${accType}`;
 const playlistSongsRoute = (spotifyUserId, playlistId, offset) =>
