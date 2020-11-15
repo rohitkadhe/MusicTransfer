@@ -1,5 +1,5 @@
 # Music Transfer
-- https://music-transfer.herokuapp.com/
+- https://music-transfer.herokuapp.com
 - Objective of this project is to allow users to transfer/share songs between Spotify Accounts easily
 
 # Website Flow
