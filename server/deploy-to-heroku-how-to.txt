@@ -1,1 +1,1 @@
-git subtree push --prefix 'your heroku app name' heroku master
+git subtree push --prefix server heroku master

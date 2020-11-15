@@ -1,7 +1,7 @@
 require('../config/env');
 const SpotifyUser = require('../models/Spotify/SpotifyUser');
 const SpotifyPlaylist = require('../models/Spotify/SpotifyPlaylist');
-const { RESPONSE_TYPE, SCOPES } = require('../constants/spotifyAPI');
+const { RESPONSE_TYPE, SCOPES, REDIRECT_URI } = require('../constants/spotifyAPI');
 const URLSearchParams = require('url').URLSearchParams;
 const axios = require('axios');
 const spotifyAPI = require('../constants/spotifyAPI');
@@ -14,7 +14,7 @@ const generateRedirectUri = (accType) => {
   const params = {
     client_id: process.env.SPOTIFY_CLIENT_ID,
     response_type: RESPONSE_TYPE,
-    redirect_uri: `http://localhost:${process.env.PORT}/spotify/callback/${accType}`,
+    redirect_uri: REDIRECT_URI(accType),
     scope: SCOPES,
     show_dialog: true,
   };
@@ -32,7 +32,7 @@ const getAccessToken = async (code, accType) => {
     client_secret,
     code,
     grant_type: 'authorization_code',
-    redirect_uri: `http://localhost:${process.env.PORT}/spotify/callback/${accType}`,
+    redirect_uri: REDIRECT_URI(accType),
   };
 
   const queryString = new URLSearchParams(params).toString();

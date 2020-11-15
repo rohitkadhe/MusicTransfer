@@ -12,7 +12,7 @@ import {
 import './servicesPage.css';
 import AuthService from '../../../services/AuthService';
 
-export default function ServicesPage({ title, accType, history, location }) {
+export default function ServicesPage({ title, accType, history }) {
   const [dismissed, setDismissed] = useState(false);
   let popup;
 

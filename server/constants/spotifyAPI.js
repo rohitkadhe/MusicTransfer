@@ -1,5 +1,5 @@
 const BASE_URL = 'https://api.spotify.com/v1';
-
+const REDIRECT_URI = (accType) => `https://music-transfer-api.herokuapp.com/callback/${accType}`;
 const RESPONSE_TYPE = 'code';
 const USER_SCOPES = 'user-read-private user-read-email ';
 const PLAYLIST_SCOPES =
@@ -11,4 +11,5 @@ module.exports = {
   BASE_URL,
   RESPONSE_TYPE,
   SCOPES,
+  REDIRECT_URI,
 };

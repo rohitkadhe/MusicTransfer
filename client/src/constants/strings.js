@@ -1,3 +1,5 @@
+//BASEURL
+const BASE_URL = 'https://music-transfer-api.herokuapp.com';
 // Account types
 const sourceAccount = 'srcAcc';
 const destinationAccount = 'destAcc';
@@ -27,7 +29,7 @@ const spotifyAuthRedirectRoute = '/spotify/:accType/:access_token';
 const selectPlaylistsRoute = '/srcAcc/spotify/:spotify_user_id/playlists';
 const errorRoute = '/error';
 //Routes Back End
-const authRoute = (accType) => `http://localhost:5433/spotify/authenticate/${accType}`;
+const authRoute = (accType) => `${BASE_URL}/spotify/authenticate/${accType}`;
 const playlistSongsRoute = (spotifyUserId, playlistId, offset) =>
   `spotify/${spotifyUserId}/playlists/${playlistId}/songs?offset=${offset}`;
 const userPlaylistRoute = (spotifyUserId) => `/spotify/${spotifyUserId}/playlists`;
@@ -35,6 +37,7 @@ const addSongsToPlaylistRoute = (spotifyUserId, playlistId) =>
   `spotify/${spotifyUserId}/playlists/${playlistId}/songs`;
 
 export {
+  BASE_URL,
   authRoute,
   authPopupTitle,
   sourceAccount,

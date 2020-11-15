@@ -3,8 +3,9 @@
 - Objective of this project is to allow users to transfer/share songs between Spotify Accounts easily
 
 # Website Flow
-  
-  ### Landing Page
+
+### Landing Page
+
   <img src="screenshots/landingPage.JPG" style="margin-bottom:10px margin-top: 10px" >
   
   ### Select Source Account Page
@@ -23,6 +24,7 @@
   <img src="screenshots/transferPageComplete.JPG" style="margin-bottom:10px margin-top: 10px">
 
 # Running the project locally
+
 ## Prerequisites
 
 - In the server directory configure the .env.example file with your client_id and client_secret
@@ -31,12 +33,14 @@
 
 ## Running the server locally
 
+- Change the REDIRECT_URI in spotifyAPI.js file in the constants folder from 'https://music-transfer-api.herokuapp.com/callback/${accType}' to "http://localhost:5433/spotify/callback/${accType}"
 - Open a terminal of choice
 - Change directories into the project directory then into the 'server' directory
 - Type 'npm run dev'
 
 ## Running the client locally
 
+- Change BASE_URL in the strings.js file in the constants folder from "https://music-transfer-api.herokuapp.com" to "http://localhost:5433"
 - Open a terminal of choice
 - Change directories into the project directory then into the 'client' directory
 - Type 'npm start'
