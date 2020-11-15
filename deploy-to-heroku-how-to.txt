@@ -1,0 +1,5 @@
+-- Server --
+git subtree push --prefix server heroku master
+
+-- Client --
+git subtree push --prefix client heroku master
