@@ -1,5 +1,5 @@
 const SpotifyService = require('../services/SpotifyService');
-
+const { CLIENT_BASE_URL } = require('../constants/spotifyAPI');
 const authenticate = async (req, res, next) => {
   try {
     const accType = req.params.accType;
@@ -19,11 +19,10 @@ const callback = async (req, res, next) => {
       access_token: response.access_token,
     };
     res.redirect(
-      `http://localhost:3000/spotify/${accType}/authenticated#` +
-        new URLSearchParams(auth).toString(),
+      `${CLIENT_BASE_URL}/spotify/${accType}/authenticated#` + new URLSearchParams(auth).toString(),
     );
   } catch (error) {
-    res.redirect(`http://localhost:3000/spotify/${accType}/error=access_denied`);
+    res.redirect(`${CLIENT_BASE_URL}/spotify/${accType}/error=access_denied`);
   }
 };
 const getUser = async (req, res, next) => {

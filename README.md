@@ -33,7 +33,8 @@
 
 ## Running the server locally
 
-- Change the REDIRECT_URI in spotifyAPI.js file in the constants folder from 'https://music-transfer-api.herokuapp.com/spotify/callback/${accType}' to "http://localhost:5433/spotify/callback/${accType}"
+- Change the REDIRECT_URI in spotifyAPI.js file in the constants folder to "http://localhost:5433/spotify/callback/${accType}"
+- Change CLIENT_BASE_URL to "http://localhost:3000"
 - Open a terminal of choice
 - Change directories into the project directory then into the 'server' directory
 - Type 'npm run dev'

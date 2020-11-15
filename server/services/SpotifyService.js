@@ -43,7 +43,7 @@ const getAccessToken = async (code, accType) => {
 };
 
 const getUser = async (access_token) => {
-  const userUrl = `${spotifyAPI.BASE_URL}/me`;
+  const userUrl = `${spotifyAPI.SPOTIFY_BASE_URL}/me`;
   const auth = {
     headers: {
       Authorization: `Bearer ${access_token}`,
@@ -58,7 +58,7 @@ const getUser = async (access_token) => {
 };
 
 const getUserPlaylists = async (spotify_user_id, access_token) => {
-  const playlistsUrl = `${spotifyAPI.BASE_URL}/users/${spotify_user_id}/playlists`;
+  const playlistsUrl = `${spotifyAPI.SPOTIFY_BASE_URL}/users/${spotify_user_id}/playlists`;
   const auth = {
     headers: {
       Authorization: `Bearer ${access_token}`,
@@ -80,7 +80,7 @@ const getUserPlaylistSongs = async (request_params, query_params, access_token) 
   let { spotify_playlist_id } = request_params;
   let { offset } = query_params;
 
-  const playlistSongsUrl = `${spotifyAPI.BASE_URL}/playlists/${spotify_playlist_id}/tracks`;
+  const playlistSongsUrl = `${spotifyAPI.SPOTIFY_BASE_URL}/playlists/${spotify_playlist_id}/tracks`;
 
   const config = {
     headers: {
@@ -112,7 +112,7 @@ const getUserPlaylistSongs = async (request_params, query_params, access_token) 
 };
 
 const createPlaylist = async (spotify_user_id, access_token, playlistName) => {
-  const createPlaylistsUrl = `${spotifyAPI.BASE_URL}/users/${spotify_user_id}/playlists`;
+  const createPlaylistsUrl = `${spotifyAPI.SPOTIFY_BASE_URL}/users/${spotify_user_id}/playlists`;
   const auth = {
     headers: {
       Authorization: `Bearer ${access_token}`,
@@ -135,7 +135,7 @@ const createPlaylist = async (spotify_user_id, access_token, playlistName) => {
 };
 
 const searchForSong = async (access_token, songName, artist) => {
-  const searchSongUrl = `${spotifyAPI.BASE_URL}/search?`;
+  const searchSongUrl = `${spotifyAPI.SPOTIFY_BASE_URL}/search?`;
   const searchQuery = `track:${songName} artist:${artist}`;
   const queryParams = {
     q: searchQuery,
@@ -170,7 +170,7 @@ const searchForSong = async (access_token, songName, artist) => {
 };
 
 const addSongs = async (playlistId, uris, access_token) => {
-  const addSongUrl = `${spotifyAPI.BASE_URL}/playlists/${playlistId}/tracks`;
+  const addSongUrl = `${spotifyAPI.SPOTIFY_BASE_URL}/playlists/${playlistId}/tracks`;
   const auth = {
     headers: {
       Authorization: `Bearer ${access_token}`,
