@@ -41,7 +41,7 @@
 
 ## Running the client locally
 
-- Change BASE_URL in the strings.js file in the constants folder from "https://music-transfer-api.herokuapp.com" to "http://localhost:5433"
+- Change BASE_URL in the strings.js file in the constants folder "http://localhost:5433"
 - Open a terminal of choice
 - Change directories into the project directory then into the 'client' directory
 - Type 'npm start'
