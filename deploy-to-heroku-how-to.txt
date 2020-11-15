@@ -1,13 +1,13 @@
 -- Server --
 
-git subtree push --prefix server heroku master
+git subtree push --prefix server heroku-server master
 
 If the command above doesnt work use, 
-git push heroku `git subtree split --prefix server master`:master --force
+git push heroku-server `git subtree split --prefix server master`:master --force
 
 -- Client --
 
-git subtree push --prefix client heroku master
+git subtree push --prefix client heroku-client master
 
 If the command above doesnt work use, 
-git push heroku `git subtree split --prefix client master`:master --force
+git push heroku-client `git subtree split --prefix client master`:master --force
